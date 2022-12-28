@@ -2,9 +2,11 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const handlebars = require('express-handlebars')
 
 const app = express();
-app.set('view engine', 'pug')
+app.engine('hbs',handlebars())
+app.set('view engine','hbs')
 
 const adminData = require('./routes/admin');
 const shopRoutes = require('./routes/shop');

@@ -12,9 +12,9 @@ html(lang="en")
             nav.main-header__nav
                 ul.main-header__item-list
                     li.main-header__item
-                        a(href="/") Shop
+                        a(href="/", class = (title === 'shop'&& 'active')) Shop
                     li.main-header__item
-                        a(href="/admin/add-product") Add Product
+                        a(href="/admin/add-product", class = (title === 'add product'&& 'active')) Add Product
 
         block content
         
