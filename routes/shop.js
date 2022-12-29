@@ -9,6 +9,7 @@ const {
   getOrders,
   getProducts,
   getProduct,
+  addToCart,
 } = require('../controllers/shop');
 const Product = require('../models/product');
 
@@ -19,6 +20,8 @@ router.get('/', getIndex);
 router.get('/products', getProducts);
 
 router.get('/products/:id', getProduct);
+
+router.post('/add-to-cart', addToCart);
 
 router.get('/cart', getCart);
 
