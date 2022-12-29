@@ -1,23 +1,12 @@
 const fs = require('fs');
 const path = require('path');
+const { getDataFromFile } = require('../util/helpers');
 
 const productsPath = path.join(
   path.dirname(process.mainModule.filename),
   'data',
   'products.json'
 );
-
-const cartPath = path.join(require.main.filename,'..','data','cart.json')
-
-function getDataFromFile(path, cb) {
-  fs.readFile(path, (err, fileContent)=>{
-    let data = []
-    if (!err) {
-      data = JSON.parse(fileContent)
-    }
-    cb(data)
-  })
-}
 
 module.exports = class Product {
   constructor(title, imageUrl, description, price) {
@@ -47,18 +36,5 @@ module.exports = class Product {
       cb(product)
     })
   }
-  static addToCart(product){
-    getDataFromFile(cartPath,(cart)=>{
-      cart.push(product)
 
-      fs.writeFile(cartPath,JSON.stringify(cart),(err)=>{
-        console.log(err);
-      })
-    })
-  }
-
-
-  static fetchCart(cb){
-    getDataFromFile(cartPath, cb)
-  }
 };
