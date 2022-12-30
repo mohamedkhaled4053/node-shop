@@ -8,7 +8,11 @@
         <% if(cart.length > 0){ %>
 
             <% for (let product of cart){ %>
-                <h1><%=product.title%>    <%=product.amount%></h1>
+                <h1><%=product.title%>    (<%=product.amount%>)</h1>
+                <form action="/delete-cart-product" method="post">
+                    <button class="btn">delete</button>
+                    <input type="hidden" name="id" value="<%=product.id%>">
+                </form>
             <% } %>
         <% } else { %>
             <h1>no items in the cart</h1>

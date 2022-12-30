@@ -26,4 +26,11 @@ module.exports = class Cart {
   static fetchCart(cb) {
     getDataFromFile(cartPath, cb);
   }
+
+  static deleteProduct(id){
+    Cart.fetchCart((cart) => {
+      let newProducts = cart.filter((product) => product.id !== id);
+      writeFileContent(cartPath, newProducts);
+    });
+  }
 };
