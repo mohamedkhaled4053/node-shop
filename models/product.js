@@ -1,12 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 const { getDataFromFile, writeFileContent } = require('../util/helpers');
+const Cart = require('./cart');
 
 const productsPath = path.join(
   path.dirname(process.mainModule.filename),
   'data',
   'products.json'
 );
+const cartPath = path.join(require.main.filename, '..', 'data', 'cart.json');
 
 module.exports = class Product {
   constructor(id, title, imageUrl, description, price) {
@@ -36,11 +38,17 @@ module.exports = class Product {
   }
 
   updateProduct() {
+    // edit products data
     Product.fetchAll((products) => {
-      let index = products.findIndex((product) => product.id === this.id);
-      products[index] = this;
-
+      let productIndex = products.findIndex((prod) => prod.id === this.id);
+      products[productIndex] = this;
       writeFileContent(productsPath, products);
+    });
+    // edit cart data
+    Cart.fetchCart((cart) => {
+      let cartIndex = cart.findIndex((prod) => prod.id === this.id);
+      cart[cartIndex] = { ...this, amount: cart[cartIndex].amount };
+      writeFileContent(cartPath, cart);
     });
   }
 
