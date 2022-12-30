@@ -12,3 +12,10 @@ exports.getDataFromFile = (path, cb) => {
     cb(data);
   });
 };
+
+
+exports.writeFileContent = (path, data) => {
+  fs.writeFile(path, JSON.stringify(data), (err) => {
+    console.log(err);
+  });
+}

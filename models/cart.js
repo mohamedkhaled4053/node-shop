@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const { getDataFromFile } = require('../util/helpers');
+const { getDataFromFile, writeFileContent } = require('../util/helpers');
 
 const cartPath = path.join(require.main.filename, '..', 'data', 'cart.json');
 
@@ -19,9 +19,7 @@ module.exports = class Cart {
         cart.push({ ...product, amount: 1 });
       }
 
-      fs.writeFile(cartPath, JSON.stringify(cart), (err) => {
-        console.log(err);
-      });
+      writeFileContent(cartPath, cart)
     });
   }
 

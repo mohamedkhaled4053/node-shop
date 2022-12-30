@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { getDataFromFile } = require('../util/helpers');
+const { getDataFromFile, writeFileContent } = require('../util/helpers');
 
 const productsPath = path.join(
   path.dirname(process.mainModule.filename),
@@ -20,9 +20,7 @@ module.exports = class Product {
   save() {
     getDataFromFile(productsPath, (products) => {
       products.push(this);
-      fs.writeFile(productsPath, JSON.stringify(products), (err) => {
-        console.log(err);
-      });
+      writeFileContent(productsPath, products)
     });
   }
 
@@ -39,14 +37,12 @@ module.exports = class Product {
 
   static updateProduct(id, reqBody) {
     Product.fetchAll((products) => {
-      let index = products.findIndex((p) => p.id === id);
       let { title, imageUrl, description, price } = reqBody;
       let unpdatedProduct = { id, title, imageUrl, description, price };
+      let index = products.findIndex((p) => p.id === id);
       products[index] = unpdatedProduct;
 
-      fs.writeFile(productsPath, JSON.stringify(products), (err) => {
-        console.log(err);
-      });
+      writeFileContent(productsPath, products)
     });
   }
 };
