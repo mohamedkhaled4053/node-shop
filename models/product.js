@@ -37,4 +37,17 @@ module.exports = class Product {
     })
   }
 
+  static updateProduct(id,reqBody){
+      Product.fetchAll((products)=>{
+          let index = products.findIndex(p => p.id === id)
+          let {title, imageUrl, description, price} = reqBody
+          let unpdatedProduct = {id, title, imageUrl,description,price}
+          products[index] = unpdatedProduct
+
+          fs.writeFile(productsPath, JSON.stringify(products),(err)=>{
+            console.log(err);
+          })
+      })
+  }
+  
 };

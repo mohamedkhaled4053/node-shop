@@ -13,7 +13,7 @@ exports.getProducts = (req, res, next) => {
 exports.getProduct = (req, res, next) => {
   Product.fetchProduct(req.params.id, (product) => {
     res.render('shop/product-detail.ejs', {
-      pageTitle: product.title,
+      pageTitle: product? product.title: 'not found',
       path: '/products',
       product,
     });
