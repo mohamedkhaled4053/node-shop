@@ -20,7 +20,7 @@ module.exports = class Product {
   save() {
     getDataFromFile(productsPath, (products) => {
       products.push(this);
-      writeFileContent(productsPath, products)
+      writeFileContent(productsPath, products);
     });
   }
 
@@ -42,7 +42,14 @@ module.exports = class Product {
       let index = products.findIndex((p) => p.id === id);
       products[index] = unpdatedProduct;
 
-      writeFileContent(productsPath, products)
+      writeFileContent(productsPath, products);
+    });
+  }
+
+  static deleteProduct(id) {
+    Product.fetchAll((products) => {
+      let newProducts = products.filter((product) => product.id !== id);
+      writeFileContent(productsPath, newProducts);
     });
   }
 };

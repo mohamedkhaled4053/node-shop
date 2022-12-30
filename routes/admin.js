@@ -8,6 +8,7 @@ const {
   postAddProduct,
   getEditProduct,
   postEditProduct,
+  postDeleteProduct,
 } = require('../controllers/admin');
 const Product = require('../models/product');
 
@@ -27,5 +28,8 @@ router.get('/edit-product/:id', getEditProduct);
 
 // /admin/edit-product/:id => POST
 router.post('/edit-product/:id', postEditProduct);
+
+// /admin/edit-product/:id => POST
+router.post('/delete-product/:id', postDeleteProduct);
 
 module.exports = router;
