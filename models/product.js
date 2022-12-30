@@ -47,8 +47,10 @@ module.exports = class Product {
     // edit cart data
     Cart.fetchCart((cart) => {
       let cartIndex = cart.findIndex((prod) => prod.id === this.id);
-      cart[cartIndex] = { ...this, amount: cart[cartIndex].amount };
-      writeFileContent(cartPath, cart);
+      if (cartIndex !== -1) {
+        cart[cartIndex] = { ...this, amount: cart[cartIndex].amount };
+        writeFileContent(cartPath, cart);
+      }
     });
   }
 
