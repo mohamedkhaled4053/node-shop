@@ -13,7 +13,7 @@ exports.getProducts = (req, res, next) => {
 exports.getProduct = (req, res, next) => {
   Product.fetchProduct(req.params.id, (product) => {
     res.render('shop/product-detail.ejs', {
-      pageTitle: product? product.title: 'not found',
+      pageTitle: product ? product.title : 'not found',
       path: '/products',
       product,
     });
@@ -22,7 +22,7 @@ exports.getProduct = (req, res, next) => {
 
 exports.addToCart = (req, res, next) => {
   Product.fetchProduct(req.body.id, (product) => {
-    Cart.addToCart(product)
+    Cart.addToCart(product);
   });
 
   res.redirect('/cart');
@@ -39,13 +39,13 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  Cart.fetchCart((cart)=>{
+  Cart.fetchCart((cart) => {
     res.render('shop/cart', {
       path: '/cart',
       pageTitle: 'Your Cart',
-      cart
+      cart,
     });
-  })
+  });
 };
 
 exports.getOrders = (req, res, next) => {

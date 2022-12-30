@@ -23,22 +23,22 @@ router.post('/add-product', postAddProduct);
 // /admin/edit-product/:id?edit=true => GET
 router.get('/edit-product/:id', (req, res, next) => {
   Product.fetchProduct(req.params.id, (product) => {
-    if(!product){
-        return res.redirect('/products/'+req.params.id)
+    if (!product) {
+      return res.redirect('/products/' + req.params.id);
     }
     res.render('admin/add-product', {
       pageTitle: 'edit Product',
       path: '/admin/edit-product',
       edit: true,
-      product
+      product,
     });
   });
 });
 
 // /admin/edit-product/:id => POST
 router.post('/edit-product/:id', (req, res, next) => {
-    Product.updateProduct(req.params.id,req.body)
-    res.redirect('/products')
+  Product.updateProduct(req.params.id, req.body);
+  res.redirect('/products');
 });
 
 module.exports = router;

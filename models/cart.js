@@ -11,14 +11,14 @@ module.exports = class Cart {
       let existed = cart.find((p) => p.id === product.id);
       // increase amount if we have it
       if (existed) {
-        let index = cart.indexOf(existed)
-        existed.amount ++
-        cart[index] = existed
+        let index = cart.indexOf(existed);
+        existed.amount++;
+        cart[index] = existed;
       } else {
         // if we don't have it add it
-        cart.push({...product, amount: 1})
+        cart.push({ ...product, amount: 1 });
       }
-      
+
       fs.writeFile(cartPath, JSON.stringify(cart), (err) => {
         console.log(err);
       });

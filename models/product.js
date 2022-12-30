@@ -14,40 +14,39 @@ module.exports = class Product {
     this.imageUrl = imageUrl;
     this.description = description;
     this.price = price;
-    this.id = Math.random().toString()
+    this.id = Math.random().toString();
   }
 
   save() {
-    getDataFromFile(productsPath,products => {
+    getDataFromFile(productsPath, (products) => {
       products.push(this);
-      fs.writeFile(productsPath, JSON.stringify(products), err => {
+      fs.writeFile(productsPath, JSON.stringify(products), (err) => {
         console.log(err);
       });
     });
   }
-  
+
   static fetchAll(cb) {
-    getDataFromFile(productsPath,cb);
+    getDataFromFile(productsPath, cb);
   }
 
-  static fetchProduct(id,cb){
-    getDataFromFile(productsPath,(products)=>{
-      let product = products.find(product => product.id === id)
-      cb(product)
-    })
+  static fetchProduct(id, cb) {
+    getDataFromFile(productsPath, (products) => {
+      let product = products.find((product) => product.id === id);
+      cb(product);
+    });
   }
 
-  static updateProduct(id,reqBody){
-      Product.fetchAll((products)=>{
-          let index = products.findIndex(p => p.id === id)
-          let {title, imageUrl, description, price} = reqBody
-          let unpdatedProduct = {id, title, imageUrl,description,price}
-          products[index] = unpdatedProduct
+  static updateProduct(id, reqBody) {
+    Product.fetchAll((products) => {
+      let index = products.findIndex((p) => p.id === id);
+      let { title, imageUrl, description, price } = reqBody;
+      let unpdatedProduct = { id, title, imageUrl, description, price };
+      products[index] = unpdatedProduct;
 
-          fs.writeFile(productsPath, JSON.stringify(products),(err)=>{
-            console.log(err);
-          })
-      })
+      fs.writeFile(productsPath, JSON.stringify(products), (err) => {
+        console.log(err);
+      });
+    });
   }
-  
 };
