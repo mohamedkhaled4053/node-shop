@@ -57,5 +57,9 @@ module.exports = class Product {
       let newProducts = products.filter((product) => product.id !== id);
       writeFileContent(productsPath, newProducts);
     });
+    Cart.fetchCart((cart) => {
+      let newProducts = cart.filter((product) => product.id !== id);
+      writeFileContent(cartPath, newProducts);
+    });
   }
 };
