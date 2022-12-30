@@ -6,6 +6,8 @@ const {
   getAddProduct,
   getProducts,
   postAddProduct,
+  getEditProduct,
+  postEditProduct,
 } = require('../controllers/admin');
 const Product = require('../models/product');
 
@@ -21,24 +23,9 @@ router.get('/products', getProducts);
 router.post('/add-product', postAddProduct);
 
 // /admin/edit-product/:id?edit=true => GET
-router.get('/edit-product/:id', (req, res, next) => {
-  Product.fetchProduct(req.params.id, (product) => {
-    if (!product) {
-      return res.redirect('/products/' + req.params.id);
-    }
-    res.render('admin/add-product', {
-      pageTitle: 'edit Product',
-      path: '/admin/edit-product',
-      edit: true,
-      product,
-    });
-  });
-});
+router.get('/edit-product/:id', getEditProduct);
 
 // /admin/edit-product/:id => POST
-router.post('/edit-product/:id', (req, res, next) => {
-  Product.updateProduct(req.params.id, req.body);
-  res.redirect('/products');
-});
+router.post('/edit-product/:id', postEditProduct);
 
 module.exports = router;

@@ -24,3 +24,22 @@ exports.getProducts = (req, res, next) => {
     });
   });
 };
+
+exports.getEditProduct =  (req, res, next) => {
+  Product.fetchProduct(req.params.id, (product) => {
+    if (!product) {
+      return res.redirect('/products/' + req.params.id);
+    }
+    res.render('admin/add-product', {
+      pageTitle: 'edit Product',
+      path: '/admin/edit-product',
+      edit: true,
+      product,
+    });
+  });
+}
+
+exports.postEditProduct = (req, res, next) => {
+  Product.updateProduct(req.params.id, req.body);
+  res.redirect('/products');
+}
