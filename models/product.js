@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { getDataFromFile, writeFileContent } = require('../util/helpers');
+const { getDataFromFile, writeFileContent, deleteFrom } = require('../util/helpers');
 const Cart = require('./cart');
 
 const productsPath = path.join(
@@ -45,7 +45,7 @@ module.exports = class Product {
       writeFileContent(productsPath, products);
     });
     // edit cart data
-    Cart.fetchCart((cart) => {
+    Cart.fetchAll((cart) => {
       let cartIndex = cart.findIndex((prod) => prod.id === this.id);
       if (cartIndex !== -1) {
         cart[cartIndex] = { ...this, amount: cart[cartIndex].amount };
@@ -55,13 +55,7 @@ module.exports = class Product {
   }
 
   static deleteProduct(id) {
-    Product.fetchAll((products) => {
-      let newProducts = products.filter((product) => product.id !== id);
-      writeFileContent(productsPath, newProducts);
-    });
-    Cart.fetchCart((cart) => {
-      let newProducts = cart.filter((product) => product.id !== id);
-      writeFileContent(cartPath, newProducts);
-    });
+    deleteFrom(Product,id,'Product')
+    deleteFrom(Cart,id,'Cart')
   }
 };

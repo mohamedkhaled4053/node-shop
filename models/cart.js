@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const { getDataFromFile, writeFileContent } = require('../util/helpers');
+const { getDataFromFile, writeFileContent, deleteFrom } = require('../util/helpers');
 
 const cartPath = path.join(require.main.filename, '..', 'data', 'cart.json');
 
@@ -23,14 +23,11 @@ module.exports = class Cart {
     });
   }
 
-  static fetchCart(cb) {
+  static fetchAll(cb) {
     getDataFromFile(cartPath, cb);
   }
 
   static deleteProduct(id){
-    Cart.fetchCart((cart) => {
-      let newProducts = cart.filter((product) => product.id !== id);
-      writeFileContent(cartPath, newProducts);
-    });
+    deleteFrom(Cart,id,'Cart')
   }
 };

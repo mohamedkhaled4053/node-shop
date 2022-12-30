@@ -1,7 +1,15 @@
 const path = require('path');
 const fs = require('fs');
+const Product = require('../models/product');
 
 exports.rootDir = path.dirname(process.mainModule.filename);
+
+const productsPath = path.join(
+  path.dirname(process.mainModule.filename),
+  'data',
+  'products.json'
+);
+const cartPath = path.join(require.main.filename, '..', 'data', 'cart.json');
 
 exports.getDataFromFile = (path, cb) => {
   fs.readFile(path, (err, fileContent) => {
@@ -17,5 +25,14 @@ exports.getDataFromFile = (path, cb) => {
 exports.writeFileContent = (path, data) => {
   fs.writeFile(path, JSON.stringify(data), (err) => {
     console.log(err);
+  });
+}
+
+
+exports.deleteFrom =(model, id,type)=>{
+  model.fetchAll((data) => {
+    let newProducts = data.filter((product) => product.id !== id);
+    let path = type === 'Product'? productsPath: cartPath
+    this.writeFileContent(path, newProducts);
   });
 }

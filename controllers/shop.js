@@ -39,7 +39,7 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  Cart.fetchCart((cart) => {
+  Cart.fetchAll((cart) => {
     res.render('shop/cart', {
       path: '/cart',
       pageTitle: 'Your Cart',
