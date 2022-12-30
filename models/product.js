@@ -9,12 +9,12 @@ const productsPath = path.join(
 );
 
 module.exports = class Product {
-  constructor(title, imageUrl, description, price) {
+  constructor(id, title, imageUrl, description, price) {
     this.title = title;
     this.imageUrl = imageUrl;
     this.description = description;
     this.price = price;
-    this.id = Math.random().toString();
+    this.id = id ? id : Math.random().toString();
   }
 
   save() {
@@ -35,12 +35,10 @@ module.exports = class Product {
     });
   }
 
-  static updateProduct(id, reqBody) {
+  updateProduct() {
     Product.fetchAll((products) => {
-      let { title, imageUrl, description, price } = reqBody;
-      let unpdatedProduct = { id, title, imageUrl, description, price };
-      let index = products.findIndex((p) => p.id === id);
-      products[index] = unpdatedProduct;
+      let index = products.findIndex((product) => product.id === this.id);
+      products[index] = this;
 
       writeFileContent(productsPath, products);
     });
