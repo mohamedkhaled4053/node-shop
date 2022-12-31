@@ -16,7 +16,7 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
+  Product.fetchAll().then((products) => {
     res.render('admin/products', {
       prods: products,
       pageTitle: 'Admin Products',
@@ -26,7 +26,7 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getEditProduct = (req, res, next) => {
-  Product.fetchProduct(req.params.id, (product) => {
+  Product.fetchProduct(req.params.id).then((product) => {
     if (!product) {
       return res.redirect('/products/' + req.params.id);
     }

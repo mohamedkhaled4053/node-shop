@@ -6,7 +6,7 @@ const cartPath = path.join(require.main.filename, '..', 'data', 'cart.json');
 
 module.exports = class Cart {
   static addToCart(product) {
-    getDataFromFile(cartPath, (cart) => {
+    getDataFromFile(cartPath).then((cart) => {
       // see if we have the product in cart
       let existed = cart.find((p) => p.id === product.id);
       // increase amount if we have it
@@ -23,8 +23,8 @@ module.exports = class Cart {
     });
   }
 
-  static fetchAll(cb) {
-    getDataFromFile(cartPath, cb);
+  static fetchAll() {
+    return getDataFromFile(cartPath)
   }
 
   static deleteProduct(id){

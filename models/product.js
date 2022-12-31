@@ -1,6 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const { getDataFromFile, writeFileContent, deleteFrom } = require('../util/helpers');
+const {
+  getDataFromFile,
+  writeFileContent,
+  deleteFrom,
+} = require('../util/helpers');
 const Cart = require('./cart');
 
 const productsPath = path.join(
@@ -20,32 +24,32 @@ module.exports = class Product {
   }
 
   save() {
-    getDataFromFile(productsPath, (products) => {
+    getDataFromFile(productsPath).then((products) => {
       products.push(this);
       writeFileContent(productsPath, products);
     });
   }
 
-  static fetchAll(cb) {
-    getDataFromFile(productsPath, cb);
+  static fetchAll() {
+    return getDataFromFile(productsPath)
   }
 
-  static fetchProduct(id, cb) {
-    getDataFromFile(productsPath, (products) => {
+  static fetchProduct(id) {
+    return getDataFromFile(productsPath).then((products) => {
       let product = products.find((product) => product.id === id);
-      cb(product);
+      return product
     });
   }
 
   updateProduct() {
     // edit products data
-    Product.fetchAll((products) => {
+    Product.fetchAll().then((products) => {
       let productIndex = products.findIndex((prod) => prod.id === this.id);
       products[productIndex] = this;
       writeFileContent(productsPath, products);
     });
     // edit cart data
-    Cart.fetchAll((cart) => {
+    Cart.fetchAll().then((cart) => {
       let cartIndex = cart.findIndex((prod) => prod.id === this.id);
       if (cartIndex !== -1) {
         cart[cartIndex] = { ...this, amount: cart[cartIndex].amount };
@@ -55,7 +59,7 @@ module.exports = class Product {
   }
 
   static deleteProduct(id) {
-    deleteFrom(Product,id,'Product')
-    deleteFrom(Cart,id,'Cart')
+    deleteFrom(Product, id, 'Product');
+    deleteFrom(Cart, id, 'Cart');
   }
 };
