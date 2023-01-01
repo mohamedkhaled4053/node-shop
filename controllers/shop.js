@@ -13,7 +13,7 @@ exports.getProducts = (req, res, next) => {
   }).catch((err) => console.log(err));;
 };
 exports.getProduct = (req, res, next) => {
-  Product.fetchProduct(req.params.id).then(([[product]]) => {
+  Product.findByPk(req.params.id).then((product) => {
     res.render('shop/product-detail.ejs', {
       pageTitle: product ? product.title : 'not found',
       path: '/products',
@@ -23,7 +23,7 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.addToCart = (req, res, next) => {
-  Product.fetchProduct(req.body.id).then(([[product]]) => {
+  Product.findByPk(req.body.id).then((product) => {
     Cart.addToCart(product);
   });
 
