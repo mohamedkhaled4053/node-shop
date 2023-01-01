@@ -40,13 +40,9 @@ module.exports = class Product {
     return db.execute('SELECT * FROM products WHERE products.id = ?',[id])
   }
 
-  updateProduct() {
+   updateProduct(id) {
     // edit products data
-    Product.fetchAll().then(([products]) => {
-      let productIndex = products.findIndex((prod) => prod.id === this.id);
-      products[productIndex] = this;
-      writeFileContent(productsPath, products);
-    });
+    db.execute('UPDATE products SET title = ?, price = ? ,description= ?, imageUrl = ? WHERE products.id = ?',[this.title,this.price,this.description,this.imageUrl,id])
     // edit cart data
     Cart.fetchAll().then((cart) => {
       let cartIndex = cart.findIndex((prod) => prod.id === this.id);
