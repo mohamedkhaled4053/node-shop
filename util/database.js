@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize')
+const {Sequelize} = require('sequelize')
 
 let sequelize = new Sequelize('node','root','mysql',{
     host: 'localhost',
