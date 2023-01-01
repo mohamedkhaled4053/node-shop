@@ -54,7 +54,8 @@ module.exports = class Product {
   }
 
   static deleteProduct(id) {
-    deleteFrom(Product, id, 'Product');
-    deleteFrom(Cart, id, 'Cart');
+    // deleteFrom(Product, id, 'Product');
+    return db.execute('DELETE FROM products WHERE products.id = ?',[id])
+    // deleteFrom(Cart, id, 'Cart');
   }
 };
