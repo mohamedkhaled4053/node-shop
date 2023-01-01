@@ -7,6 +7,8 @@ const {
 } = require('../util/helpers');
 const Cart = require('./cart');
 
+const db = require('../util/database')
+
 const productsPath = path.join(
   path.dirname(process.mainModule.filename),
   'data',
@@ -31,7 +33,7 @@ module.exports = class Product {
   }
 
   static fetchAll() {
-    return getDataFromFile(productsPath)
+    return db.execute('SELECT * FROM products')
   }
 
   static fetchProduct(id) {
@@ -43,7 +45,7 @@ module.exports = class Product {
 
   updateProduct() {
     // edit products data
-    Product.fetchAll().then((products) => {
+    Product.fetchAll().then(([products]) => {
       let productIndex = products.findIndex((prod) => prod.id === this.id);
       products[productIndex] = this;
       writeFileContent(productsPath, products);

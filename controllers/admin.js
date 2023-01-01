@@ -16,7 +16,7 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll().then((products) => {
+  Product.fetchAll().then(([products, fieldData]) => {
     res.render('admin/products', {
       prods: products,
       pageTitle: 'Admin Products',

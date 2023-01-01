@@ -41,7 +41,7 @@ exports.writeFileContent = (path, data) => {
 
 
 exports.deleteFrom =(model, id,type)=>{
-  model.fetchAll().then((data) => {
+  model.fetchAll().then(([data]) => {
     let newProducts = data.filter((product) => product.id !== id);
     let path = type === 'Product'? productsPath: cartPath
     this.writeFileContent(path, newProducts);
