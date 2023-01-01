@@ -11,7 +11,7 @@ exports.getProducts = (req, res, next) => {
   });
 };
 exports.getProduct = (req, res, next) => {
-  Product.fetchProduct(req.params.id).then((product) => {
+  Product.fetchProduct(req.params.id).then(([[product]]) => {
     res.render('shop/product-detail.ejs', {
       pageTitle: product ? product.title : 'not found',
       path: '/products',
@@ -21,7 +21,7 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.addToCart = (req, res, next) => {
-  Product.fetchProduct(req.body.id).then((product) => {
+  Product.fetchProduct(req.body.id).then(([[product]]) => {
     Cart.addToCart(product);
   });
 

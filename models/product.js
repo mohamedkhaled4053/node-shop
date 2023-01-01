@@ -37,10 +37,7 @@ module.exports = class Product {
   }
 
   static fetchProduct(id) {
-    return getDataFromFile(productsPath).then((products) => {
-      let product = products.find((product) => product.id === id);
-      return product;
-    });
+    return db.execute('SELECT * FROM products WHERE products.id = ?',[id])
   }
 
   updateProduct() {

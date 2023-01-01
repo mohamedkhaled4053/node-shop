@@ -30,7 +30,7 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getEditProduct = (req, res, next) => {
-  Product.fetchProduct(req.params.id).then((product) => {
+  Product.fetchProduct(req.params.id).then(([[product]]) => {
     if (!product) {
       return res.redirect('/products/' + req.params.id);
     }
