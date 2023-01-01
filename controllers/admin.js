@@ -42,9 +42,9 @@ exports.getEditProduct = (req, res, next) => {
 exports.postEditProduct = (req, res, next) => {
   let id = req.params.id;
   let { title, imageUrl, description, price } = req.body;
-  let updatedProduct = new Product(null, title, imageUrl, description, price);
-  updatedProduct.updateProduct(id);
-  res.redirect('/admin/products');
+  Product.update({title, imageUrl, description, price},{where: {id}}).then(()=>{
+    res.redirect('/admin/products');
+  })
 };
 
 exports.postDeleteProduct = (req, res) => {
