@@ -7,7 +7,7 @@ const {
 } = require('../util/helpers');
 const Cart = require('./cart');
 
-const db = require('../util/database')
+const db = require('../util/database');
 
 const productsPath = path.join(
   path.dirname(process.mainModule.filename),
@@ -26,20 +26,20 @@ module.exports = class Product {
   }
 
   save() {
-    getDataFromFile(productsPath).then((products) => {
-      products.push(this);
-      writeFileContent(productsPath, products);
-    });
+    return db.execute(
+      'INSERT INTO products (title, imageUrl, description, price) VALUES (?,?,?,?)',
+      [this.title, this.imageUrl, this.description, this.price]
+    );
   }
 
   static fetchAll() {
-    return db.execute('SELECT * FROM products')
+    return db.execute('SELECT * FROM products');
   }
 
   static fetchProduct(id) {
     return getDataFromFile(productsPath).then((products) => {
       let product = products.find((product) => product.id === id);
-      return product
+      return product;
     });
   }
 
