@@ -30,9 +30,9 @@ router.get('/orders', getOrders);
 
 router.get('/checkout', getCheckout);
 
-router.post('/delete-cart-product', (req,res)=>{
-  Cart.deleteProduct(req.body.id)
-  res.redirect('/cart')
+router.post('/delete-cart-product', (req, res) => {
+  Cart.deleteProduct(req.body.id);
+  res.redirect('/cart');
 });
 
 module.exports = router;

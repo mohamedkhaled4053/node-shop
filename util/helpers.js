@@ -12,15 +12,15 @@ const productsPath = path.join(
 const cartPath = path.join(require.main.filename, '..', 'data', 'cart.json');
 
 exports.getDataFromFile = (path) => {
-  return new Promise((resolve, reject)=>{
+  return new Promise((resolve, reject) => {
     fs.readFile(path, (err, fileContent) => {
       let data = [];
       if (!err) {
         data = JSON.parse(fileContent);
       }
-      resolve(data)
+      resolve(data);
     });
-  })
+  });
 };
 // exports.getDataFromFile = (path, cb) => {
 //   fs.readFile(path, (err, fileContent) => {
@@ -32,18 +32,16 @@ exports.getDataFromFile = (path) => {
 //   });
 // };
 
-
 exports.writeFileContent = (path, data) => {
   fs.writeFile(path, JSON.stringify(data), (err) => {
     console.log(err);
   });
-}
+};
 
-
-exports.deleteFrom =(model, id,type)=>{
+exports.deleteFrom = (model, id, type) => {
   model.fetchAll().then(([data]) => {
     let newProducts = data.filter((product) => product.id !== id);
-    let path = type === 'Product'? productsPath: cartPath
+    let path = type === 'Product' ? productsPath : cartPath;
     this.writeFileContent(path, newProducts);
   });
-}
+};

@@ -1,34 +1,30 @@
-const Sequelize = require('sequelize')
-const sequelize = require('../util/database')
+const Sequelize = require('sequelize');
+const sequelize = require('../util/database');
 
-
-const Product = sequelize.define('product',{
-  id:{
+const Product = sequelize.define('product', {
+  id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
-    unique: true, 
+    unique: true,
     autoIncrement: true,
-    allowNull: false
+    allowNull: false,
   },
   title: Sequelize.STRING,
-  imageUrl:{
+  imageUrl: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   price: {
     type: Sequelize.INTEGER,
-    allowNull: false
+    allowNull: false,
   },
-  description:{
-    type : Sequelize.STRING,
-    allowNull: false
-  }
-})
+  description: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+});
 
-
-module.exports = Product
-
-
+module.exports = Product;
 
 // const db = require('../util/database');
 
@@ -61,7 +57,7 @@ module.exports = Product
 //     db.execute('UPDATE products SET title = ?, price = ? ,description= ?, imageUrl = ? WHERE products.id = ?',[this.title,this.price,this.description,this.imageUrl,id])
 //     // edit cart data
 //     db.execute('UPDATE products SET title = ?, price = ? ,description= ?, imageUrl = ? WHERE products.id = ?',[this.title,this.price,this.description,this.imageUrl,id])
-//     
+//
 //   }
 
 //   static deleteProduct(id) {
