@@ -23,11 +23,34 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.addToCart = (req, res, next) => {
-  Product.findByPk(req.body.id).then((product) => {
-    Cart.addToCart(product);
-  });
+  let fetchedCart;
+  req.user
+    .getCart()
+    .then((cart) => {
+      fetchedCart = cart;
+      return cart.getProducts({ where: { id: req.body.id } });
+    })
+    .then((products) => {
+      let product;
+      if (products > 0) {
+        product = products[0];
+      }
+      let newQuantity = 1;
+      if (product) {
+        // ...
+      }
 
-  res.redirect('/cart');
+      return Product.findByPk(req.body.id)
+        .then((product) => {
+          return fetchedCart.addProduct(product, {
+            through: { amount: newQuantity },
+          });
+        })
+        .then(() => {
+          res.redirect('/cart');
+        });
+    });
+
 };
 
 exports.getIndex = (req, res, next) => {
@@ -42,15 +65,18 @@ exports.getIndex = (req, res, next) => {
 
 exports.getCart = (req, res, next) => {
   req.user.getCart().then((cart) => {
-    cart.getProducts().then((products) => {
-      res.render('shop/cart', {
-        path: '/cart',
-        pageTitle: 'Your Cart',
-        cart: products,
+    cart
+      .getProducts()
+      .then((products) => {
+        res.render('shop/cart', {
+          path: '/cart',
+          pageTitle: 'Your Cart',
+          cart: products,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    }).catch(err=>{
-      console.log(err);
-    });
   });
 };
 
