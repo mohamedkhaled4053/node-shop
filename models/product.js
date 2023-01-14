@@ -14,7 +14,8 @@ module.exports = class Product {
   }
 
   static fetchAll() {
-
+    let db = getDb()
+    return db.collection('products').find().toArray()
   }
 
   static fetchProduct(id) {
