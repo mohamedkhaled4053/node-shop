@@ -10,24 +10,22 @@ module.exports = class Product {
   }
 
   save() {
-    let db = getDb()
-    return db.collection('products').insertOne(this)
+    return getDb().collection('products').insertOne(this)
   }
 
   static fetchAll() {
-    let db = getDb()
-    return db.collection('products').find().toArray()
+    return getDb().collection('products').find().toArray()
   }
 
   static fetchProduct(id) {
     return getDb().collection('products').findOne({_id: new ObjectId(id)})
   }
 
-   updateProduct(id) {
-
+   update(id) {
+    return getDb().collection('products').updateOne({_id: new ObjectId(id)},{$set: this})
   }
 
   static deleteProduct(id) {
-
+    return getDb().collection('products').deleteOne({_id: new ObjectId(id)})
   }
 };

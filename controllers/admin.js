@@ -29,7 +29,7 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getEditProduct = (req, res, next) => {
-  req.user.getProducts({ where: { id: req.params.id } }).then(([product]) => {
+  Product.fetchProduct(req.params.id).then(product=>{
     if (!product) {
       return res.redirect('/products/' + req.params.id);
     }
@@ -39,23 +39,21 @@ exports.getEditProduct = (req, res, next) => {
       edit: true,
       product,
     });
-  });
+  })
 };
 
 exports.postEditProduct = (req, res, next) => {
   let id = req.params.id;
   let { title, imageUrl, description, price } = req.body;
-  Product.update(
-    { title, imageUrl, description, price },
-    { where: { id } }
-  ).then(() => {
+  let updatedProduct = new Product(title, imageUrl, description, price);
+  updatedProduct.update(id).then(() => {
     res.redirect('/admin/products');
   });
 };
 
 exports.postDeleteProduct = (req, res) => {
   let id = req.params.id;
-  Product.destroy({ where: { id } }).then(() => {
+  Product.deleteProduct(id ).then(() => {
     res.redirect('/admin/products');
   });
 };
