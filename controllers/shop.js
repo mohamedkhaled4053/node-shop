@@ -13,7 +13,7 @@ exports.getProducts = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 exports.getProduct = (req, res, next) => {
-  Product.findByPk(req.params.id).then((product) => {
+  Product.fetchProduct(req.params.id).then((product) => {
     res.render('shop/product-detail.ejs', {
       pageTitle: product ? product.title : 'not found',
       path: '/products',

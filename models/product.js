@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { getDb } = require("../util/database");
 
 module.exports = class Product {
@@ -19,7 +20,7 @@ module.exports = class Product {
   }
 
   static fetchProduct(id) {
-
+    return getDb().collection('products').findOne({_id: new ObjectId(id)})
   }
 
    updateProduct(id) {
