@@ -9,14 +9,13 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-  const { title, imageUrl, price, description } = req.body;
-  req.user.createProduct({ title, imageUrl, price, description }).then(() => {
-    res.redirect('/admin/products');
-  });
-
-  // Product.create({ title, imageUrl, price, description, userId: req.user.id}).then(()=>{
-  //   res.redirect('/admin/products')
-  // });
+  const { title, imageUrl, description, price } = req.body;
+  let product = new Product(title, imageUrl, description, price);
+  product.save().then(()=>{
+    res.redirect('/admin/products')
+  }).catch(err=>{
+    throw Error(err)
+  })
 };
 
 exports.getProducts = (req, res, next) => {

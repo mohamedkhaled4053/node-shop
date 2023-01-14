@@ -9,7 +9,8 @@ module.exports = class Product {
   }
 
   save() {
-
+    let db = getDb()
+    return db.collection('products').insertOne(this)
   }
 
   static fetchAll() {
