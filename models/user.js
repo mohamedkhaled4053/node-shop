@@ -53,7 +53,11 @@ class User {
   static findById(id) {
     return getDb()
       .collection('users')
-      .findOne({ _id: ObjectId(id) });
+      .findOne({ _id: ObjectId(id) }).then(user=> {
+        let { _id, name, email, cart } = user;
+        let userObj = new User(_id, name, email, cart);
+        return userObj
+      })
   }
 }
 

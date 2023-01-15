@@ -23,9 +23,7 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.addToCart = (req, res, next) => {
-  let { _id, name, email, cart } = req.user;
-  let updatedUser = new User(_id, name, email, cart);
-  updatedUser.addToCart(req.body.id).then(() => {
+  req.user.addToCart(req.body.id).then(() => {
     res.redirect('/cart');
   });
 
@@ -69,10 +67,7 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  let { _id, name, email, cart } = req.user;
-  let user = new User(_id, name, email, cart);
-
-  user.getCart().then((products) => {
+  req.user.getCart().then((products) => {
     res.render('shop/cart', {
       path: '/cart',
       pageTitle: 'Your Cart',
