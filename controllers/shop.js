@@ -69,11 +69,18 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  res.render('shop/cart', {
-    path: '/cart',
-    pageTitle: 'Your Cart',
-    cart: req.user.cart,
-  });
+  let {_id , name, email, cart} = req.user
+  let user = new User(_id,name, email ,cart)
+
+  user.getCart().then(products=>{
+    res.render('shop/cart', {
+      path: '/cart',
+      pageTitle: 'Your Cart',
+      cart: products,
+    });
+
+  })
+  
 };
 
 exports.getOrders = (req, res, next) => {
