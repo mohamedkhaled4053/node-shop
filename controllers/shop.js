@@ -89,3 +89,7 @@ exports.getCheckout = (req, res, next) => {
     pageTitle: 'Checkout',
   });
 };
+
+exports.deleteCartItem = (req, res) => {
+  req.user.deleteCartItem(req.body.id).then(() => res.redirect('/cart'));
+};

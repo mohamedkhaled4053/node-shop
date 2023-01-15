@@ -56,7 +56,12 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res) => {
   let id = req.params.id;
-  Product.deleteProduct(id).then(() => {
-    res.redirect('/admin/products');
-  });
+  Product.deleteProduct(id)
+    .then(() => {
+      res.redirect('/admin/products');
+      return;
+    })
+    .then(() => {
+      req.user.deleteCartItem(id);
+    });
 };

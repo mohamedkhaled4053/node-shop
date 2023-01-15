@@ -53,11 +53,21 @@ class User {
   static findById(id) {
     return getDb()
       .collection('users')
-      .findOne({ _id: ObjectId(id) }).then(user=> {
+      .findOne({ _id: ObjectId(id) })
+      .then((user) => {
         let { _id, name, email, cart } = user;
         let userObj = new User(_id, name, email, cart);
-        return userObj
-      })
+        return userObj;
+      });
+  }
+
+  deleteCartItem(id) {
+    let updatedCart = this.cart.filter(
+      (item) => item.productId.toString() !== id
+    );
+    return getDb()
+      .collection('users')
+      .updateOne({ _id: this._id }, { $set: { cart: updatedCart } });
   }
 }
 
