@@ -1,3 +1,29 @@
+const { Schema, model } = require('mongoose');
+
+let prodcutSchema = new Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  imageUrl: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+});
+
+let Product = model('Product', prodcutSchema)
+module.exports = Product
+
+
+
 // const { ObjectId } = require('mongodb');
 // const { getDb } = require('../util/database');
 
