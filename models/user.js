@@ -89,9 +89,11 @@ class User {
       });
   }
 
-  getOrders(){
+  getOrders() {
     return getDb()
-    .collection('orders').find({'user._id': this._id}).toArray()
+      .collection('orders')
+      .find({ 'user._id': this._id })
+      .toArray();
   }
 }
 

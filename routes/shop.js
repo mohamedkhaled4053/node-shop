@@ -13,8 +13,6 @@ const {
   deleteCartItem,
   createOrder,
 } = require('../controllers/shop');
-const Product = require('../models/product');
-const Cart = require('../models/cart');
 
 const router = express.Router();
 
