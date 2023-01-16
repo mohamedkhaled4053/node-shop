@@ -71,10 +71,10 @@ class User {
   }
 
   addOrder() {
-    this.getCart()
+    return this.getCart()
       .then((prodcuts) => {
         let order = {
-          itmes: prodcuts,
+          items: prodcuts,
           user: {
             _id: this._id,
             name: this.name,
@@ -87,6 +87,11 @@ class User {
           .collection('users')
           .updateOne({ _id: this._id }, { $set: { cart: [] } });
       });
+  }
+
+  getOrders(){
+    return getDb()
+    .collection('orders').find({'user._id': this._id}).toArray()
   }
 }
 

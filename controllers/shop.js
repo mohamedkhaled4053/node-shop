@@ -77,9 +77,12 @@ exports.getCart = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  res.render('shop/orders', {
-    path: '/orders',
-    pageTitle: 'Your Orders',
+  req.user.getOrders().then((orders) => {
+    res.render('shop/orders', {
+      path: '/orders',
+      pageTitle: 'Your Orders',
+      orders: orders,
+    });
   });
 };
 
@@ -94,6 +97,6 @@ exports.deleteCartItem = (req, res) => {
   req.user.deleteCartItem(req.body.id).then(() => res.redirect('/cart'));
 };
 
-exports.createOrder = (req,res)=>{
-  req.user.addOrder()
-}
+exports.createOrder = (req, res) => {
+  req.user.addOrder().then(() => res.redirect('/orders'));
+};
