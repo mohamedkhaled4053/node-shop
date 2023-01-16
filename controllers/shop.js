@@ -2,7 +2,7 @@ const Product = require('../models/product');
 const User = require('../models/user');
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
     .then((products) => {
       res.render('shop/product-list', {
         prods: products,
@@ -13,7 +13,7 @@ exports.getProducts = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 exports.getProduct = (req, res, next) => {
-  Product.fetchProduct(req.params.id).then((product) => {
+  Product.findById(req.params.id).then((product) => {
     res.render('shop/product-detail.ejs', {
       pageTitle: product ? product.title : 'not found',
       path: '/products',
@@ -29,7 +29,7 @@ exports.addToCart = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll().then((products) => {
+  Product.find().then((products) => {
     res.render('shop/index', {
       prods: products,
       pageTitle: 'Shop',

@@ -40,11 +40,11 @@ module.exports = Product
 //     return getDb().collection('products').insertOne(this);
 //   }
 
-//   static fetchAll() {
+//   static find() {
 //     return getDb().collection('products').find().toArray();
 //   }
 
-//   static fetchProduct(id) {
+//   static findById(id) {
 //     return getDb()
 //       .collection('products')
 //       .findOne({ _id: new ObjectId(id) });
