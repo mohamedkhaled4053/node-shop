@@ -11,6 +11,7 @@ const {
   getProduct,
   addToCart,
   deleteCartItem,
+  createOrder,
 } = require('../controllers/shop');
 const Product = require('../models/product');
 const Cart = require('../models/cart');
@@ -32,5 +33,7 @@ router.get('/orders', getOrders);
 router.get('/checkout', getCheckout);
 
 router.post('/delete-cart-product', deleteCartItem);
+
+router.post('/create-order', createOrder);
 
 module.exports = router;

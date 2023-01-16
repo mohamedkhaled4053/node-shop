@@ -93,3 +93,7 @@ exports.getCheckout = (req, res, next) => {
 exports.deleteCartItem = (req, res) => {
   req.user.deleteCartItem(req.body.id).then(() => res.redirect('/cart'));
 };
+
+exports.createOrder = (req,res)=>{
+  req.user.addOrder()
+}
