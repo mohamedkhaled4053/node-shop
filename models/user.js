@@ -1,5 +1,7 @@
 const { model, Schema, Types } = require('mongoose');
 
+const { Product } = require('./product');
+
 let userSchema = new Schema({
   name: {
     type: String,
@@ -17,13 +19,43 @@ let userSchema = new Schema({
   ],
 });
 
+function addToCart(productId) {
+  return Product.findById(productId).then((product) => {
+    // check if we have product in cart
+    let cartItemIndex = this.cart.findIndex(
+      (item) => item.productId.toString() === product._id.toString()
+    );
+    if (cartItemIndex != -1) {
+      // if we have it then increase the amount
+      this.cart[cartItemIndex].amount++;
+    } else {
+      // if we don't have it then add it
+      this.cart.push({ productId: product._id, amount: 1 });
+    }
+    return this.save();
+  });
+}
+
+function getCart() {
+  return this.populate('cart.productId').then((user) => {
+    return user.cart;
+  });
+}
+
+function deleteCartItem(id) {
+  this.cart = this.cart.filter((item) => item.productId.toString() !== id);
+  return this.save();
+}
+
+userSchema.methods = { addToCart, getCart, deleteCartItem };
+
 let User = model('User', userSchema);
 
-module.exports = User;
+module.exports = { User };
 
 // const { ObjectId } = require('mongodb');
 // const { getDb } = require('../util/database');
-// const Product = require('./product');
+// const {Product} = require('./product');
 
 // class User {
 //   constructor(id, name, email, cart) {

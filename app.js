@@ -13,7 +13,7 @@ app.set('views', 'views');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
-const User = require('./models/user');
+const {User} = require('./models/user');
 
 app.use((req, res, next) => {
   User.findById('63c582f725b4b033fc93ef8a')

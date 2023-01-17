@@ -24,7 +24,7 @@ let prodcutSchema = new Schema({
 });
 
 let Product = model('Product', prodcutSchema);
-module.exports = Product;
+module.exports = { Product, prodcutSchema };
 
 // const { ObjectId } = require('mongodb');
 // const { getDb } = require('../util/database');
