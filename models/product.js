@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 
 let prodcutSchema = new Schema({
   title: {
@@ -17,12 +17,14 @@ let prodcutSchema = new Schema({
     type: String,
     required: true,
   },
+  userId: {
+    type: Types.ObjectId,
+    ref: 'User',
+  },
 });
 
-let Product = model('Product', prodcutSchema)
-module.exports = Product
-
-
+let Product = model('Product', prodcutSchema);
+module.exports = Product;
 
 // const { ObjectId } = require('mongodb');
 // const { getDb } = require('../util/database');

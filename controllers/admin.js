@@ -10,7 +10,13 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const { title, imageUrl, description, price } = req.body;
-  let product = new Product({ title, imageUrl, description, price });
+  let product = new Product({
+    title,
+    imageUrl,
+    description,
+    price,
+    userId: req.user._id,
+  });
   product
     .save()
     .then(() => {
@@ -48,16 +54,16 @@ exports.getEditProduct = (req, res, next) => {
 exports.postEditProduct = (req, res, next) => {
   let id = req.params.id;
   let { title, imageUrl, description, price } = req.body;
-  Product.findByIdAndUpdate(id, {title,imageUrl,description, price})
-    .then(() => {
+  Product.findByIdAndUpdate(id, { title, imageUrl, description, price }).then(
+    () => {
       res.redirect('/admin/products');
-    });
+    }
+  );
 };
 
 exports.postDeleteProduct = (req, res) => {
   let id = req.params.id;
-  Product.findByIdAndDelete(id)
-    .then(() => {
-      res.redirect('/admin/products');
-    })
+  Product.findByIdAndDelete(id).then(() => {
+    res.redirect('/admin/products');
+  });
 };
