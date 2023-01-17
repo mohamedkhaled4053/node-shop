@@ -1,4 +1,5 @@
 const { model, Schema, Types } = require('mongoose');
+const Order = require('./order');
 
 const { Product } = require('./product');
 
@@ -38,6 +39,7 @@ function addToCart(productId) {
 
 function getCart() {
   return this.populate('cart.productId').then((user) => {
+    console.log(user.cart);
     return user.cart;
   });
 }
@@ -47,7 +49,30 @@ function deleteCartItem(id) {
   return this.save();
 }
 
-userSchema.methods = { addToCart, getCart, deleteCartItem };
+function addOrder() {
+  return this.getCart()
+    .then((prodcuts) => {
+      let order = new Order({
+        items: prodcuts,
+        user: {
+          _id: this._id,
+          name: this.name,
+        },
+      });
+      return order.save()
+    })
+    // .then(() => {
+    //   return getDb()
+    //     .collection('users')
+    //     .updateOne({ _id: this._id }, { $set: { cart: [] } });
+    // });
+}
+
+function getOrders() {
+  return Order.find({ 'user._id': this._id })
+}
+
+userSchema.methods = { addToCart, getCart, deleteCartItem, addOrder, getOrders };
 
 let User = model('User', userSchema);
 
