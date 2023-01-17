@@ -14,7 +14,7 @@ let userSchema = new Schema({
   },
   cart: [
     {
-      productId: { type: Types.ObjectId, ref: 'Product' },
+      product: { type: Types.ObjectId, ref: 'Product' },
       amount: Number,
     },
   ],
@@ -24,28 +24,27 @@ function addToCart(productId) {
   return Product.findById(productId).then((product) => {
     // check if we have product in cart
     let cartItemIndex = this.cart.findIndex(
-      (item) => item.productId.toString() === product._id.toString()
+      (item) => item.product.toString() === product._id.toString()
     );
     if (cartItemIndex != -1) {
       // if we have it then increase the amount
       this.cart[cartItemIndex].amount++;
     } else {
       // if we don't have it then add it
-      this.cart.push({ productId: product._id, amount: 1 });
+      this.cart.push({ product: product._id, amount: 1 });
     }
     return this.save();
   });
 }
 
 function getCart() {
-  return this.populate('cart.productId').then((user) => {
-    console.log(user.cart);
+  return this.populate({path:'cart.product'}).then((user) => {
     return user.cart;
   });
 }
 
 function deleteCartItem(id) {
-  this.cart = this.cart.filter((item) => item.productId.toString() !== id);
+  this.cart = this.cart.filter((item) => item.product.toString() !== id);
   return this.save();
 }
 
@@ -61,11 +60,10 @@ function addOrder() {
       });
       return order.save()
     })
-    // .then(() => {
-    //   return getDb()
-    //     .collection('users')
-    //     .updateOne({ _id: this._id }, { $set: { cart: [] } });
-    // });
+    .then(() => {
+      this.cart = []
+      return this.save()
+    });
 }
 
 function getOrders() {

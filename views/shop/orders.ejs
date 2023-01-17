@@ -14,7 +14,7 @@
                             <h1>Order - # <%= order._id %></h1>
                             <ul class="orders__products">
                                 <% for (let product of order.items){  %>
-                                    <li class="orders__products-item"><%= product.productId.title %> (<%= product.amount %>)</li>
+                                    <li class="orders__products-item"><%= product.product.title %> (<%= product.amount %>)</li>
                                 <% } %>
                             </ul>
                         </li>

@@ -2,7 +2,7 @@ const { model, Schema, Types } = require('mongoose');
 
 let orderSchema = new Schema({
   items: [{
-    productId:Object,
+    product:Object,
     amount: Number
   }],
   user: {
