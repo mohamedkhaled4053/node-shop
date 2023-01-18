@@ -8,7 +8,7 @@ exports.getProducts = (req, res, next) => {
         prods: products,
         pageTitle: 'All Products',
         path: '/products',
-        isLoggedIn : req.isLoggedIn
+        isLoggedIn : req.session.isLoggedIn
       });
     })
     .catch((err) => console.log(err));
@@ -19,13 +19,13 @@ exports.getProduct = (req, res, next) => {
       pageTitle: product ? product.title : 'not found',
       path: '/products',
       product,
-      isLoggedIn : req.isLoggedIn
+      isLoggedIn : req.session.isLoggedIn
     });
   });
 };
 
 exports.addToCart = (req, res, next) => {
-  req.user.addToCart(req.body.id).then(() => {
+  req.session.user.addToCart(req.body.id).then(() => {
     res.redirect('/cart');
   });
 };
@@ -36,29 +36,29 @@ exports.getIndex = (req, res, next) => {
       prods: products,
       pageTitle: 'Shop',
       path: '/',
-      isLoggedIn : req.isLoggedIn
+      isLoggedIn : req.session.isLoggedIn
     });
   });
 };
 
 exports.getCart = (req, res, next) => {
-  req.user.getCart().then((cart) => {
+  req.session.user.getCart().then((cart) => {
     res.render('shop/cart', {
       path: '/cart',
       pageTitle: 'Your Cart',
       cart,
-      isLoggedIn : req.isLoggedIn
+      isLoggedIn : req.session.isLoggedIn
     });
   });
 };
 
 exports.getOrders = (req, res, next) => {
-  req.user.getOrders().then((orders) => {
+  req.session.user.getOrders().then((orders) => {
     res.render('shop/orders', {
       path: '/orders',
       pageTitle: 'Your Orders',
       orders: orders,
-      isLoggedIn : req.isLoggedIn
+      isLoggedIn : req.session.isLoggedIn
     });
   });
 };
@@ -67,14 +67,14 @@ exports.getCheckout = (req, res, next) => {
   res.render('shop/checkout', {
     path: '/checkout',
     pageTitle: 'Checkout',
-    isLoggedIn : req.isLoggedIn
+    isLoggedIn : req.session.isLoggedIn
   });
 };
 
 exports.deleteCartItem = (req, res) => {
-  req.user.deleteCartItem(req.body.id).then(() => res.redirect('/cart'));
+  req.session.user.deleteCartItem(req.body.id).then(() => res.redirect('/cart'));
 };
 
 exports.createOrder = (req, res) => {
-  req.user.addOrder().then(() => res.redirect('/orders'));
+  req.session.user.addOrder().then(() => res.redirect('/orders'));
 };
