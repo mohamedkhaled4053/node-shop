@@ -25,7 +25,7 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.addToCart = (req, res, next) => {
-  req.session.user.addToCart(req.body.id).then(() => {
+  req.user.addToCart(req.body.id).then(() => {
     res.redirect('/cart');
   });
 };
@@ -42,7 +42,7 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  req.session.user.getCart().then((cart) => {
+  req.user.getCart().then((cart) => {
     res.render('shop/cart', {
       path: '/cart',
       pageTitle: 'Your Cart',
@@ -53,7 +53,7 @@ exports.getCart = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  req.session.user.getOrders().then((orders) => {
+  req.user.getOrders().then((orders) => {
     res.render('shop/orders', {
       path: '/orders',
       pageTitle: 'Your Orders',
@@ -72,9 +72,9 @@ exports.getCheckout = (req, res, next) => {
 };
 
 exports.deleteCartItem = (req, res) => {
-  req.session.user.deleteCartItem(req.body.id).then(() => res.redirect('/cart'));
+  req.user.deleteCartItem(req.body.id).then(() => res.redirect('/cart'));
 };
 
 exports.createOrder = (req, res) => {
-  req.session.user.addOrder().then(() => res.redirect('/orders'));
+  req.user.addOrder().then(() => res.redirect('/orders'));
 };
