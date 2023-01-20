@@ -13,6 +13,7 @@ const {
   deleteCartItem,
   createOrder,
 } = require('../controllers/shop');
+const isAuth = require('../middleware/isauth');
 
 const router = express.Router();
 
@@ -22,16 +23,16 @@ router.get('/products', getProducts);
 
 router.get('/products/:id', getProduct);
 
-router.post('/add-to-cart', addToCart);
+router.post('/add-to-cart',isAuth, addToCart);
 
-router.get('/cart', getCart);
+router.get('/cart',isAuth, getCart);
 
-router.get('/orders', getOrders);
+router.get('/orders',isAuth, getOrders);
 
-router.get('/checkout', getCheckout);
+router.get('/checkout',isAuth, getCheckout);
 
-router.post('/delete-cart-product', deleteCartItem);
+router.post('/delete-cart-product',isAuth, deleteCartItem);
 
-router.post('/create-order', createOrder);
+router.post('/create-order',isAuth, createOrder);
 
 module.exports = router;

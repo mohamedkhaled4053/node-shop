@@ -11,8 +11,12 @@ const {
   postDeleteProduct,
 } = require('../controllers/admin');
 const { Product } = require('../models/product');
+const isAuth = require('../middleware/isauth');
 
 const router = express.Router();
+
+// /admin route need authentication
+router.use(isAuth)
 
 // /admin/add-product => GET
 router.get('/add-product', getAddProduct);
