@@ -27,6 +27,8 @@ exports.postLogin = async (req, res, next) => {
       res.redirect('/');
     });
   } catch (error) {
+    req.flash('error', 'something went wrong')
+    res.redirect('/login')
     console.log(error);
   }
 };
@@ -38,9 +40,12 @@ exports.postLogout = (req, res, next) => {
 };
 
 exports.getSignup = (req, res, next) => {
+  let errorMsg = req.flash('error')
+  errorMsg = errorMsg.length > 0 ? errorMsg[0]: null
   res.render('auth/signup', {
     pageTitle: 'signup',
     path: '/signup',
+    errorMsg
   });
 };
 
@@ -49,6 +54,7 @@ exports.postSignup = async (req, res, next) => {
   try {
     let user = await User.findOne({ email });
     if (user) {
+      req.flash('error', 'this user already used for other user')
       return res.redirect('/signup');
     }
     let hashedPassword = await bcrypt.hash(password, 12);
@@ -56,6 +62,8 @@ exports.postSignup = async (req, res, next) => {
     await newUser.save();
     res.redirect('/login');
   } catch (error) {
+    req.flash('error', 'something went wrong')
+    res.redirect('/signup')
     console.log(error);
   }
 };
