@@ -38,7 +38,7 @@ function addToCart(productId) {
 }
 
 function getCart() {
-  return this.populate({path:'cart.product'}).then((user) => {
+  return this.populate({ path: 'cart.product' }).then((user) => {
     return user.cart;
   });
 }
@@ -58,19 +58,25 @@ function addOrder() {
           name: this.name,
         },
       });
-      return order.save()
+      return order.save();
     })
     .then(() => {
-      this.cart = []
-      return this.save()
+      this.cart = [];
+      return this.save();
     });
 }
 
 function getOrders() {
-  return Order.find({ 'user._id': this._id })
+  return Order.find({ 'user._id': this._id });
 }
 
-userSchema.methods = { addToCart, getCart, deleteCartItem, addOrder, getOrders };
+userSchema.methods = {
+  addToCart,
+  getCart,
+  deleteCartItem,
+  addOrder,
+  getOrders,
+};
 
 let User = model('User', userSchema);
 

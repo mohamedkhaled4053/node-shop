@@ -1,5 +1,5 @@
-const {Product} = require('../models/product');
-const {User} = require('../models/user');
+const { Product } = require('../models/product');
+const { User } = require('../models/user');
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -8,7 +8,7 @@ exports.getProducts = (req, res, next) => {
         prods: products,
         pageTitle: 'All Products',
         path: '/products',
-        isLoggedIn : req.session.isLoggedIn
+        isLoggedIn: req.session.isLoggedIn,
       });
     })
     .catch((err) => console.log(err));
@@ -19,7 +19,7 @@ exports.getProduct = (req, res, next) => {
       pageTitle: product ? product.title : 'not found',
       path: '/products',
       product,
-      isLoggedIn : req.session.isLoggedIn
+      isLoggedIn: req.session.isLoggedIn,
     });
   });
 };
@@ -36,7 +36,7 @@ exports.getIndex = (req, res, next) => {
       prods: products,
       pageTitle: 'Shop',
       path: '/',
-      isLoggedIn : req.session.isLoggedIn
+      isLoggedIn: req.session.isLoggedIn,
     });
   });
 };
@@ -47,7 +47,7 @@ exports.getCart = (req, res, next) => {
       path: '/cart',
       pageTitle: 'Your Cart',
       cart,
-      isLoggedIn : req.session.isLoggedIn
+      isLoggedIn: req.session.isLoggedIn,
     });
   });
 };
@@ -58,7 +58,7 @@ exports.getOrders = (req, res, next) => {
       path: '/orders',
       pageTitle: 'Your Orders',
       orders: orders,
-      isLoggedIn : req.session.isLoggedIn
+      isLoggedIn: req.session.isLoggedIn,
     });
   });
 };
@@ -67,7 +67,7 @@ exports.getCheckout = (req, res, next) => {
   res.render('shop/checkout', {
     path: '/checkout',
     pageTitle: 'Checkout',
-    isLoggedIn : req.session.isLoggedIn
+    isLoggedIn: req.session.isLoggedIn,
   });
 };
 

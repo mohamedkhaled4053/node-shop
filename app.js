@@ -26,7 +26,6 @@ let store = new MongoDBStore({
   collection: 'sessions',
 });
 
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(
@@ -41,7 +40,7 @@ app.use(
 app.use((req, res, next) => {
   User.findById('63c582f725b4b033fc93ef8a')
     .then((user) => {
-      req.user = user
+      req.user = user;
       next();
     })
     .catch((err) => console.log(err));
