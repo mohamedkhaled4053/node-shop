@@ -6,17 +6,26 @@ exports.getLogin = (req, res, next) => {
   res.render('auth/login', { pageTitle: 'login', path: '/login', isLoggedIn });
 };
 
-exports.postLogin = (req, res, next) => {
-  User.findById('63c582f725b4b033fc93ef8a')
-    .then((user) => {
-      req.session.isLoggedIn = true;
-      req.session.user = user;
-      req.session.save((err) => {
-        console.log(err);
-        res.redirect('/');
-      });
-    })
-    .catch((err) => console.log(err));
+exports.postLogin = async (req, res, next) => {
+  try {
+    let { email, password } = req.body;
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.redirect('/login');
+    }
+    let isCorrectPassword = await bcrypt.compare(password, user.password);
+    if (!isCorrectPassword) {
+      return res.redirect('/login');
+    }
+    req.session.isLoggedIn = true;
+    req.session.user = user;
+    req.session.save((err) => {
+      console.log(err);
+      res.redirect('/');
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.postLogout = (req, res, next) => {
