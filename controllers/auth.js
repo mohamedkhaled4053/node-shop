@@ -2,7 +2,9 @@ const { User } = require('../models/user');
 const bcrypt = require('bcryptjs');
 
 exports.getLogin = (req, res, next) => {
-  res.render('auth/login', { pageTitle: 'login', path: '/login' });
+  let errorMsg = req.flash('error')
+  errorMsg = errorMsg.length > 0 ? errorMsg[0]: null
+  res.render('auth/login', { pageTitle: 'login', path: '/login',errorMsg});
 };
 
 exports.postLogin = async (req, res, next) => {
@@ -10,10 +12,12 @@ exports.postLogin = async (req, res, next) => {
     let { email, password } = req.body;
     let user = await User.findOne({ email });
     if (!user) {
+      req.flash('error', 'Invalid username or password')
       return res.redirect('/login');
     }
     let isCorrectPassword = await bcrypt.compare(password, user.password);
     if (!isCorrectPassword) {
+      req.flash('error', 'Invalid username or password')
       return res.redirect('/login');
     }
     req.session.isLoggedIn = true;
