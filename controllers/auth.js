@@ -33,4 +33,13 @@ exports.getSignup = (req, res, next) => {
   });
 };
 
-exports.postSignup = (req, res, next) => {};
+exports.postSignup = async (req, res, next) => {
+  let { email, password, confirmPassword } = req.body;
+  let user = await User.findOne({email})
+  if (user) {
+    return res.redirect('/signup');
+  }
+  let newUser = new User({ email, password, cart: [] });
+  await newUser.save();
+  res.redirect('/login')
+};
