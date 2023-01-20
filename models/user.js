@@ -55,7 +55,7 @@ function addOrder() {
         items: prodcuts,
         user: {
           _id: this._id,
-          name: this.name,
+          email: this.email,
         },
       });
       return order.save();

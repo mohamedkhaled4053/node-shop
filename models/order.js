@@ -9,7 +9,7 @@ let orderSchema = new Schema({
   ],
   user: {
     _id: { type: Types.ObjectId, ref: 'User' },
-    name: String,
+    email: String,
   },
 });
 
