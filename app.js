@@ -4,7 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
-const csrf = require('csurf')
+const csrf = require('csurf');
 
 const errorController = require('./controllers/error');
 const mongoose = require('mongoose');
@@ -26,7 +26,7 @@ let store = new MongoDBStore({
   uri: mongodbUri,
   collection: 'sessions',
 });
-let csrfProtection = csrf()
+let csrfProtection = csrf();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -39,10 +39,10 @@ app.use(
   })
 );
 
-app.use(csrfProtection)
+app.use(csrfProtection);
 app.use((req, res, next) => {
   if (!req.session.user) {
-    return next()
+    return next();
   }
   User.findById(req.session.user._id)
     .then((user) => {
@@ -52,10 +52,13 @@ app.use((req, res, next) => {
     .catch((err) => console.log(err));
 });
 
-app.use((req,res,next)=>{
-  res.locals = {csrfToken: req.csrfToken()}
-  next()
-})
+app.use((req, res, next) => {
+  res.locals = {
+    csrfToken: req.csrfToken(),
+    isLoggedIn: req.session.isLoggedIn,
+  };
+  next();
+});
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
