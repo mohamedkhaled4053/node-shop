@@ -1,8 +1,6 @@
 const { User } = require('../models/user');
 const bcrypt = require('bcryptjs');
-const sendgridMail = require('@sendgrid/mail')
-
-sendgridMail.setApiKey('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')
+const sendEmail = require('../util/sendEmail');
 
 exports.getLogin = (req, res, next) => {
   let errorMsg = req.flash('error')
@@ -63,13 +61,8 @@ exports.postSignup = async (req, res, next) => {
     let hashedPassword = await bcrypt.hash(password, 12);
     let newUser = new User({ email, password: hashedPassword, cart: [] });
     await newUser.save();
-    await sendgridMail.send({
-      to: email,
-      from: 'mohamedkhaled4053@gmail.com',
-      subject: 'welcome to shop',
-      html: '<h1>you successfully signedup</h1>'
-    })
     res.redirect('/login');
+    await sendEmail(email,'welcome to shop', '<h1>you successfully signed up</h1>')
   } catch (error) {
     req.flash('error', 'something went wrong')
     res.redirect('/signup')
