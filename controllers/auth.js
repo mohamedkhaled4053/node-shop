@@ -76,3 +76,13 @@ exports.postSignup = async (req, res, next) => {
     console.log(error);
   }
 };
+
+exports.getReset = (req, res, next) => {
+  let errorMsg = req.flash('error')
+  errorMsg = errorMsg.length > 0 ? errorMsg[0]: null
+  res.render('auth/reset', {
+    pageTitle: 'reset',
+    path: '/reset',
+    errorMsg
+  });
+};
