@@ -103,7 +103,13 @@ exports.postReset = async (req, res, next) => {
       sendEmail(
         req.body.email,
         'reset password',
-        `you requested to reset your password`
+        `<p>
+          click
+          <a href="http://localhost:3000/reset/${token}">this link</a>
+          to reset your password
+        </p>
+        <p>if you didn't try to reset your password then ignore this email</p>
+      `
       );
       return res.redirect('/');
     });
@@ -111,3 +117,20 @@ exports.postReset = async (req, res, next) => {
     console.log(error);
   }
 };
+
+
+exports.getNewPassword = (req,res)=>{
+  let errorMsg = req.flash('error');
+  errorMsg = errorMsg.length > 0 ? errorMsg[0] : null;
+
+  res.render('auth/new-password', {
+    pageTitle: 'newPassword',
+    path: '/newpassword',
+    errorMsg,
+  });
+}
+
+exports.postNewPassword = (req,res)=>{
+  console.log('dd');
+  res.redirect('/login')
+}
