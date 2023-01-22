@@ -118,19 +118,38 @@ exports.postReset = async (req, res, next) => {
   }
 };
 
-
-exports.getNewPassword = (req,res)=>{
+exports.getNewPassword = async (req, res) => {
   let errorMsg = req.flash('error');
   errorMsg = errorMsg.length > 0 ? errorMsg[0] : null;
+
+  let user = await User.findOne({ resetToken: req.params.token }).catch((err) =>
+    console.log(err)
+  );
+
+  if (!user) {
+    errorMsg = 'this token is not valid';
+  } else if (user && user.resetTokenExpiration < Date.now()) {
+    errorMsg = 'this token is not valid any more';
+  }
 
   res.render('auth/new-password', {
     pageTitle: 'newPassword',
     path: '/newpassword',
     errorMsg,
+    user,
+    token: user.resetToken,
   });
-}
+};
 
-exports.postNewPassword = (req,res)=>{
-  console.log('dd');
-  res.redirect('/login')
-}
+exports.postNewPassword = async (req, res) => {
+  let hashedPassword = await bcrypt.hash(req.body.password, 12);
+  await User.findOneAndUpdate(
+    {
+      _id: req.body.userId,
+      resetToken: req.body.token,
+      resetTokenExpiration: { $gt: Date.now() },
+    },
+    { password: hashedPassword, resetTokenExpiration: Date.now() }
+  );
+  res.redirect('/login');
+};
