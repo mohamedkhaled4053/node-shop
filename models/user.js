@@ -12,6 +12,8 @@ let userSchema = new Schema({
     type: String,
     required: true,
   },
+  resetToken :String,
+  resetTokenExpiration : Date,
   cart: [
     {
       product: { type: Types.ObjectId, ref: 'Product' },

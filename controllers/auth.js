@@ -1,6 +1,7 @@
 const { User } = require('../models/user');
 const bcrypt = require('bcryptjs');
 const sendEmail = require('../util/sendEmail');
+const crypto = require('crypto')
 
 exports.getLogin = (req, res, next) => {
   let errorMsg = req.flash('error')
@@ -79,3 +80,27 @@ exports.getReset = (req, res, next) => {
     errorMsg
   });
 };
+
+
+exports.postReset = (req,res,next) =>{
+  User.findOne({email: req.body.email}).then(user=>{
+    if (!user) {
+      req.flash('error', "this user doesn't exist")
+      return res.redirect('/reset')
+    }
+    crypto.randomBytes(32,(err, buffer)=>{
+      if (err) {
+        return console.log(err);
+      }
+      let token = buffer.toString('hex')
+      user.resetToken = token
+      user.resetTokenExpiration = Date.now() + 3600000
+      return user.save()
+    })
+  }).then(()=>{
+    sendEmail(req.body.email,'reset password', `
+     you requested to reset your password
+    `)
+    return res.redirect('/')
+  }).catch(err=>console.log(err))
+}

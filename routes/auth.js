@@ -6,6 +6,7 @@ const {
   getSignup,
   postSignup,
   getReset,
+  postReset,
 } = require('../controllers/auth');
 
 let router = Router();
@@ -16,5 +17,6 @@ router.post('/logout', postLogout);
 router.get('/signup', getSignup);
 router.post('/signup', postSignup);
 router.get('/reset', getReset);
+router.post('/reset', postReset);
 
 module.exports = router;
