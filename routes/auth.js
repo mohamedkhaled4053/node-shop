@@ -28,9 +28,19 @@ router.post(
         if (email === 'test@gmail.com') {
           throw Error('this froppedin');
         }
-        return true
+        return true;
       }),
-      body('password').isAlphanumeric().withMessage('password only contains numbers and letters').isLength({min: 3}).withMessage('password minimum length is 3')
+    body('password')
+      .isAlphanumeric()
+      .withMessage('password only contains numbers and letters')
+      .isLength({ min: 3 })
+      .withMessage('password minimum length is 3'),
+    body('confirmPassword').custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw Error('make sure that the password match cofirm password field');
+      }
+      return true;
+    }),
   ],
   postSignup
 );
