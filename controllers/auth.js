@@ -43,12 +43,12 @@ exports.postLogout = (req, res, next) => {
 };
 
 exports.getSignup = (req, res, next) => {
-  let errorMsg = req.flash('error');
-  errorMsg = errorMsg.length > 0 ? errorMsg[0] : null;
+  let errorMsgs = req.flash('error');
+  errorMsgs = errorMsgs.length > 0 ? errorMsgs: null;
   res.render('auth/signup', {
     pageTitle: 'signup',
     path: '/signup',
-    errorMsg,
+    errorMsgs,
   });
 };
 
@@ -60,7 +60,7 @@ exports.postSignup = async (req, res, next) => {
     return res.status(422).render('auth/signup', {
       pageTitle: 'signup',
       path: '/signup',
-      errorMsg: errors.array()[0].msg,
+      errorMsgs: errors.array().map((error)=>error.msg),
     });
   }
   try {
