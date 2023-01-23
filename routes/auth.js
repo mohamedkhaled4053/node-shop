@@ -11,6 +11,7 @@ const {
   postNewPassword,
 } = require('../controllers/auth');
 const { check, body } = require('express-validator');
+const { User } = require('../models/user');
 
 let router = Router();
 
@@ -24,9 +25,10 @@ router.post(
     check('email')
       .isEmail()
       .withMessage('email is not valid')
-      .custom((email, { req }) => {
-        if (email === 'test@gmail.com') {
-          throw Error('this froppedin');
+      .custom(async (email) => {
+        let user = await User.findOne({ email });
+        if (user) {
+          return Promise.reject('this user already used for other user');
         }
         return true;
       }),

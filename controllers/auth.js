@@ -64,11 +64,6 @@ exports.postSignup = async (req, res, next) => {
     });
   }
   try {
-    let user = await User.findOne({ email });
-    if (user) {
-      req.flash('error', 'this user already used for other user');
-      return res.redirect('/signup');
-    }
     let hashedPassword = await bcrypt.hash(password, 12);
     let newUser = new User({ email, password: hashedPassword, cart: [] });
     await newUser.save();
