@@ -18,7 +18,20 @@ router.get('/login', getLogin);
 router.post('/login', postLogin);
 router.post('/logout', postLogout);
 router.get('/signup', getSignup);
-router.post('/signup',[check('email').isEmail().withMessage('email is not valid')] ,postSignup);
+router.post(
+  '/signup',
+  [
+    check('email')
+      .isEmail()
+      .withMessage('email is not valid')
+      .custom((email, { req }) => {
+        if (email === 'test@gmail.com') {
+          throw Error('this froppedin');
+        }
+      }),
+  ],
+  postSignup
+);
 router.get('/reset', getReset);
 router.post('/reset', postReset);
 router.get('/reset/:token', getNewPassword);
