@@ -10,12 +10,12 @@ const {
   getNewPassword,
   postNewPassword,
 } = require('../controllers/auth');
-const { signupValidation } = require('../validation/validation');
+const { signupValidation, loginValidation } = require('../validation/validation');
 
 let router = Router();
 
 router.get('/login', getLogin);
-router.post('/login', postLogin);
+router.post('/login',loginValidation, postLogin);
 router.post('/logout', postLogout);
 router.get('/signup', getSignup);
 router.post('/signup', signupValidation, postSignup);

@@ -25,4 +25,9 @@ let signupValidation = [
   }),
 ];
 
-module.exports = { signupValidation };
+let loginValidation = [
+  check('email').isEmail().withMessage('email is not valid'),
+  body('password').notEmpty().withMessage('please enter the password'),
+];
+
+module.exports = { signupValidation, loginValidation };

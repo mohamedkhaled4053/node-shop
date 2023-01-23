@@ -5,12 +5,21 @@ const crypto = require('crypto');
 const { validationResult } = require('express-validator');
 
 exports.getLogin = (req, res, next) => {
-  let errorMsg = req.flash('error');
-  errorMsg = errorMsg.length > 0 ? errorMsg[0] : null;
-  res.render('auth/login', { pageTitle: 'login', path: '/login', errorMsg });
+  let errorMsgs = req.flash('error');
+  errorMsgs = errorMsgs.length > 0 ? errorMsgs : null;
+  res.render('auth/login', { pageTitle: 'login', path: '/login', errorMsgs });
 };
 
 exports.postLogin = async (req, res, next) => {
+  let errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.render('auth/login', {
+      pageTitle: 'login',
+      path: '/login',
+      errorMsgs: errors.array().map((error) => error.msg),
+    });
+  }
+
   try {
     let { email, password } = req.body;
     let user = await User.findOne({ email });
@@ -44,7 +53,7 @@ exports.postLogout = (req, res, next) => {
 
 exports.getSignup = (req, res, next) => {
   let errorMsgs = req.flash('error');
-  errorMsgs = errorMsgs.length > 0 ? errorMsgs: null;
+  errorMsgs = errorMsgs.length > 0 ? errorMsgs : null;
   res.render('auth/signup', {
     pageTitle: 'signup',
     path: '/signup',
@@ -60,7 +69,7 @@ exports.postSignup = async (req, res, next) => {
     return res.status(422).render('auth/signup', {
       pageTitle: 'signup',
       path: '/signup',
-      errorMsgs: errors.array().map((error)=>error.msg),
+      errorMsgs: errors.array().map((error) => error.msg),
     });
   }
   try {
