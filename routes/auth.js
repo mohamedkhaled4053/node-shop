@@ -10,7 +10,7 @@ const {
   getNewPassword,
   postNewPassword,
 } = require('../controllers/auth');
-const { check } = require('express-validator');
+const { check, body } = require('express-validator');
 
 let router = Router();
 
@@ -28,7 +28,9 @@ router.post(
         if (email === 'test@gmail.com') {
           throw Error('this froppedin');
         }
+        return true
       }),
+      body('password').isAlphanumeric().withMessage('password only contains numbers and letters').isLength({min: 3}).withMessage('password minimum length is 3')
   ],
   postSignup
 );
