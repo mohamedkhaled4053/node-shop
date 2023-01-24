@@ -1,5 +1,6 @@
 const { check, body } = require('express-validator');
 const { User } = require('../models/user');
+const bcrypt = require('bcryptjs')
 
 let signupValidation = [
   check('email')
@@ -26,8 +27,26 @@ let signupValidation = [
 ];
 
 let loginValidation = [
-  check('email').isEmail().withMessage('email is not valid'),
-  body('password').notEmpty().withMessage('please enter the password'),
+  check('email').custom(async (email, { req }) => {
+    try {
+      let user = await User.findOne({ email });
+      if (!user) {
+        return Promise.reject('Invalid email or password');
+      }
+      let isCorrectPassword = await bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+      if (!isCorrectPassword) {
+        return Promise.reject('Invalid email or password');
+      }
+      req.loggedInUser = user;
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw Error('something went wrong')
+    }
+  }),
 ];
 
 module.exports = { signupValidation, loginValidation };

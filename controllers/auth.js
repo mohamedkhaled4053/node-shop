@@ -15,7 +15,7 @@ exports.getLogin = (req, res, next) => {
   });
 };  
 
-exports.postLogin = async (req, res, next) => {
+exports.postLogin = (req, res, next) => {
   let { email, password } = req.body;
   let errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -26,29 +26,12 @@ exports.postLogin = async (req, res, next) => {
       oldInput: { email, password },
     });
   }
-
-  try {
-    let user = await User.findOne({ email });
-    if (!user) {
-      req.flash('error', 'Invalid username or password');
-      return res.redirect('/login');
-    }
-    let isCorrectPassword = await bcrypt.compare(password, user.password);
-    if (!isCorrectPassword) {
-      req.flash('error', 'Invalid username or password');
-      return res.redirect('/login');
-    }
     req.session.isLoggedIn = true;
-    req.session.user = user;
+    req.session.user = req.loggedInUser;
     req.session.save((err) => {
       console.log(err);
       res.redirect('/');
     });
-  } catch (error) {
-    req.flash('error', 'something went wrong');
-    res.redirect('/login');
-    console.log(error);
-  }
 };
 
 exports.postLogout = (req, res, next) => {
