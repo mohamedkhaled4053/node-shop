@@ -7,21 +7,27 @@ const { validationResult } = require('express-validator');
 exports.getLogin = (req, res, next) => {
   let errorMsgs = req.flash('error');
   errorMsgs = errorMsgs.length > 0 ? errorMsgs : null;
-  res.render('auth/login', { pageTitle: 'login', path: '/login', errorMsgs });
-};
+  res.render('auth/login', {
+    pageTitle: 'login',
+    path: '/login',
+    errorMsgs,
+    oldInput: null,
+  });
+};  
 
 exports.postLogin = async (req, res, next) => {
+  let { email, password } = req.body;
   let errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.render('auth/login', {
       pageTitle: 'login',
       path: '/login',
       errorMsgs: errors.array().map((error) => error.msg),
+      oldInput: { email, password },
     });
   }
 
   try {
-    let { email, password } = req.body;
     let user = await User.findOne({ email });
     if (!user) {
       req.flash('error', 'Invalid username or password');
@@ -58,6 +64,7 @@ exports.getSignup = (req, res, next) => {
     pageTitle: 'signup',
     path: '/signup',
     errorMsgs,
+    oldInput: null,
   });
 };
 
@@ -70,6 +77,7 @@ exports.postSignup = async (req, res, next) => {
       pageTitle: 'signup',
       path: '/signup',
       errorMsgs: errors.array().map((error) => error.msg),
+      oldInput: { email, password, confirmPassword },
     });
   }
   try {
