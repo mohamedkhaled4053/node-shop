@@ -49,4 +49,12 @@ let loginValidation = [
   }),
 ];
 
-module.exports = { signupValidation, loginValidation };
+
+let addProductValidation = [
+  check('title').notEmpty().withMessage('title is required'),
+  check('imageUrl').isURL().withMessage('image url is not valid url'),
+  check('price').isFloat().withMessage('price should be float number'),
+  check('description').notEmpty().withMessage('description is required')
+]
+
+module.exports = { signupValidation, loginValidation, addProductValidation };
