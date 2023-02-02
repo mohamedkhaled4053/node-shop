@@ -7,11 +7,7 @@
    <%- include('../includes/navigation.ejs') %>
 
     <main>
-        <% if(errorMsgs){ %>
-            <% for(let msg of errorMsgs){ %>
-                <div class="user-message user-message--error"><%=msg%></div>
-            <% } %>
-        <% } %>
+        <%- include('../includes/error-msgs.ejs') %>
         <form class="signup-form" action="/signup" method="POST" novalidate>
             <div class="form-control">
                 <label for="email">E-Mail</label>
