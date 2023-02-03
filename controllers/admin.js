@@ -60,6 +60,7 @@ exports.getEditProduct = (req, res, next) => {
       path: '/admin/edit-product',
       edit: true,
       product,
+      errorMsgs: null
     });
   });
 };
@@ -67,6 +68,16 @@ exports.getEditProduct = (req, res, next) => {
 exports.postEditProduct = (req, res, next) => {
   let id = req.params.id;
   let { title, imageUrl, description, price } = req.body;
+  let errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).render('admin/add-product', {
+      pageTitle: 'edit Product',
+      path: '/admin/edit-product',
+      edit: true,
+      errorMsgs: errors.array().map((error) => error.msg),
+      product: {_id:id, title, imageUrl, description,price },
+    });
+  }
   Product.findOneAndUpdate({_id:id,userId: req.user._id}, { title, imageUrl, description, price }).then(
     () => {
       res.redirect('/admin/products');

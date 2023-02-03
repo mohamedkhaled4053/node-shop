@@ -32,7 +32,7 @@ router.post('/add-product',addProductValidation, postAddProduct);
 router.get('/edit-product/:id', getEditProduct);
 
 // /admin/edit-product/:id => POST
-router.post('/edit-product/:id', postEditProduct);
+router.post('/edit-product/:id', addProductValidation,postEditProduct);
 
 // /admin/edit-product/:id => POST
 router.post('/delete-product/:id', postDeleteProduct);
