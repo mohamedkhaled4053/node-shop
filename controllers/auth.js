@@ -82,11 +82,14 @@ exports.postSignup = async (req, res, next) => {
 
 exports.getReset = (req, res, next) => {
   let errorMsg = req.flash('error');
+  let message = req.flash('message')
   errorMsg = errorMsg.length > 0 ? errorMsg[0] : null;
+  message = message.length > 0 ? message[0] : null;
   res.render('auth/reset', {
     pageTitle: 'reset',
     path: '/reset',
     errorMsg,
+    message
   });
 };
 
@@ -116,7 +119,8 @@ exports.postReset = async (req, res, next) => {
         <p>if you didn't try to reset your password then ignore this email</p>
       `
       );
-      return res.redirect('/');
+      req.flash('message','check your email please')
+      return res.redirect('/reset');
     });
   } catch (error) {
     console.log(error);
@@ -142,7 +146,7 @@ exports.getNewPassword = async (req, res) => {
     path: '/newpassword',
     errorMsg,
     user,
-    token: user.resetToken,
+    token: user? user.resetToken:null,
   });
 };
 
