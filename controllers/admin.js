@@ -13,21 +13,23 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const { title, description, price } = req.body;
-  let imageUrl = req.file
-  console.log(imageUrl);
+  let image = req.file
+  console.log(image);
   let errors = validationResult(req)
-  if (!errors.isEmpty()) {
+  if (!errors.isEmpty() || !image) {
+    let errorMsgs= errors.array().map((error) => error.msg)
+    if (!image) errorMsgs.push('image is required')
     return res.status(422).render('admin/add-product', {
       pageTitle: 'Add Product',
       path: '/admin/add-product',
       edit: false,
-      errorMsgs: errors.array().map((error) => error.msg),
-      oldInput: { title, imageUrl, description,price },
+      errorMsgs,
+      oldInput: { title, description,price , image},
     });
   }
   let product = new Product({
     title,
-    imageUrl,
+    imageUrl: image.path,
     description,
     price,
     userId: req.user._id,
@@ -72,6 +74,7 @@ exports.getEditProduct = (req, res, next) => {
 exports.postEditProduct = (req, res, next) => {
   let id = req.params.id;
   let { title, imageUrl, description, price } = req.body;
+  let image = req.file
   let errors = validationResult(req)
   if (!errors.isEmpty()) {
     return res.status(422).render('admin/add-product', {
@@ -79,9 +82,10 @@ exports.postEditProduct = (req, res, next) => {
       path: '/admin/edit-product',
       edit: true,
       errorMsgs: errors.array().map((error) => error.msg),
-      product: {_id:id, title, imageUrl, description,price },
+      product: {_id:id, title, description,price },
     });
   }
+  imageUrl = (!image)? imageUrl:image.path
   Product.findOneAndUpdate({_id:id,userId: req.user._id}, { title, imageUrl, description, price }).then(
     () => {
       res.redirect('/admin/products');
