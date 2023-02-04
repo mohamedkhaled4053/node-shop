@@ -99,6 +99,6 @@ exports.postEditProduct = (req, res, next) => {
 exports.postDeleteProduct = (req, res) => {
   let id = req.params.id;
   Product.findOneAndDelete({ _id: id, userId: req.user._id }).then(() => {
-    res.redirect('/admin/products');
+    req.user.deleteCartItem(id).then(() => res.redirect('/admin/products'));
   });
 };
