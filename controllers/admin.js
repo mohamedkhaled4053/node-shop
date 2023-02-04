@@ -36,7 +36,9 @@ exports.postAddProduct = (req, res, next) => {
       res.redirect('/admin/products');
     })
     .catch((err) => {
-      res.redirect('/500')
+      let error = new Error(err)
+      error.httpStatusCode= 500
+      return next(err)
     });
 };
 
