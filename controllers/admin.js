@@ -7,24 +7,24 @@ exports.getAddProduct = (req, res, next) => {
     path: '/admin/add-product',
     edit: false,
     oldInput: null,
-    errorMsgs:null
+    errorMsgs: null,
   });
 };
 
 exports.postAddProduct = (req, res, next) => {
   const { title, description, price } = req.body;
-  let image = req.file
+  let image = req.file;
   console.log(image);
-  let errors = validationResult(req)
+  let errors = validationResult(req);
   if (!errors.isEmpty() || !image) {
-    let errorMsgs= errors.array().map((error) => error.msg)
-    if (!image) errorMsgs.push('image is required')
+    let errorMsgs = errors.array().map((error) => error.msg);
+    if (!image) errorMsgs.push('image is required');
     return res.status(422).render('admin/add-product', {
       pageTitle: 'Add Product',
       path: '/admin/add-product',
       edit: false,
       errorMsgs,
-      oldInput: { title, description,price , image},
+      oldInput: { title, description, price, image },
     });
   }
   let product = new Product({
@@ -40,14 +40,14 @@ exports.postAddProduct = (req, res, next) => {
       res.redirect('/admin/products');
     })
     .catch((err) => {
-      let error = new Error(err)
-      error.httpStatusCode= 500
-      return next(err)
+      let error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(err);
     });
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.find({userId:req.user._id}).then((products) => {
+  Product.find({ userId: req.user._id }).then((products) => {
     res.render('admin/products', {
       prods: products,
       pageTitle: 'Admin Products',
@@ -57,46 +57,48 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getEditProduct = (req, res, next) => {
-  Product.findOne({_id:req.params.id, userId: req.user._id}).then((product) => {
-    if (!product) {
-      return res.redirect('/products/' + req.params.id);
+  Product.findOne({ _id: req.params.id, userId: req.user._id }).then(
+    (product) => {
+      if (!product) {
+        return res.redirect('/products/' + req.params.id);
+      }
+      res.render('admin/add-product', {
+        pageTitle: 'edit Product',
+        path: '/admin/edit-product',
+        edit: true,
+        product,
+        errorMsgs: null,
+      });
     }
-    res.render('admin/add-product', {
-      pageTitle: 'edit Product',
-      path: '/admin/edit-product',
-      edit: true,
-      product,
-      errorMsgs: null
-    });
-  });
+  );
 };
 
 exports.postEditProduct = (req, res, next) => {
   let id = req.params.id;
   let { title, imageUrl, description, price } = req.body;
-  let image = req.file
-  let errors = validationResult(req)
+  let image = req.file;
+  let errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).render('admin/add-product', {
       pageTitle: 'edit Product',
       path: '/admin/edit-product',
       edit: true,
       errorMsgs: errors.array().map((error) => error.msg),
-      product: {_id:id, title, description,price },
+      product: { _id: id, title, description, price },
     });
   }
-  imageUrl = (!image)? imageUrl:`/${image.path}`,
-
-  Product.findOneAndUpdate({_id:id,userId: req.user._id}, { title, imageUrl, description, price }).then(
-    () => {
+  (imageUrl = !image ? imageUrl : `/${image.path}`),
+    Product.findOneAndUpdate(
+      { _id: id, userId: req.user._id },
+      { title, imageUrl, description, price }
+    ).then(() => {
       res.redirect('/admin/products');
-    }
-  );
+    });
 };
 
 exports.postDeleteProduct = (req, res) => {
   let id = req.params.id;
-  Product.findOneAndDelete({_id:id, userId:req.user._id}).then(() => {
+  Product.findOneAndDelete({ _id: id, userId: req.user._id }).then(() => {
     res.redirect('/admin/products');
   });
 };

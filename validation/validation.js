@@ -1,6 +1,6 @@
 const { check, body } = require('express-validator');
 const { User } = require('../models/user');
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
 
 let signupValidation = [
   check('email')
@@ -44,16 +44,15 @@ let loginValidation = [
       return true;
     } catch (error) {
       console.log(error);
-      throw Error('something went wrong')
+      throw Error('something went wrong');
     }
   }),
 ];
 
-
 let addProductValidation = [
   check('title').notEmpty().withMessage('title is required'),
   check('price').isFloat().withMessage('price should be float number'),
-  check('description').notEmpty().withMessage('description is required')
-]
+  check('description').notEmpty().withMessage('description is required'),
+];
 
 module.exports = { signupValidation, loginValidation, addProductValidation };
