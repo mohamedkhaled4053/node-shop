@@ -12,6 +12,7 @@ const {
   addToCart,
   deleteCartItem,
   createOrder,
+  getInvoice,
 } = require('../controllers/shop');
 const isAuth = require('../middleware/isauth');
 
@@ -34,5 +35,11 @@ router.get('/checkout',isAuth, getCheckout);
 router.post('/delete-cart-product',isAuth, deleteCartItem);
 
 router.post('/create-order',isAuth, createOrder);
+
+router.post('/create-order',isAuth, createOrder);
+
+router.get('/orders/:orderId',isAuth, getInvoice)
+
+router.get('/orders/:orderId',isAuth, getInvoice)
 
 module.exports = router;
