@@ -15,10 +15,28 @@
   margin-bottom: 1rem;
 }
 
+.orders__flex{
+  display: flex;
+  align-items: center;
+}
+.orders__flex a{
+  margin-left: 10px;
+  text-decoration: none;
+  color: white;
+  background-color: black;
+  padding: 5px 10px;
+  border-radius: 20px;
+  transition: 0.3s;
+}
+.orders__flex a:hover{
+  background-color: #00695c;
+}
+
 .orders__products {
     list-style: none;
     margin: 0;
     padding: 0;
+    width: 100%;
 }
 
 .orders__products-item {

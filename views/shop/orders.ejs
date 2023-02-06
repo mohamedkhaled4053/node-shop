@@ -12,11 +12,14 @@
                     <% for (let order of orders){ %>
                         <li class="orders__item">
                             <h1>Order - # <%= order._id %></h1>
-                            <ul class="orders__products">
-                                <% for (let product of order.items){  %>
-                                    <li class="orders__products-item"><%= product.product.title %> (<%= product.amount %>)</li>
-                                <% } %>
-                            </ul>
+                            <div class="orders__flex">
+                                <ul class="orders__products">
+                                    <% for (let product of order.items){  %>
+                                        <li class="orders__products-item"><%= product.product.title %> (<%= product.amount %>)</li>
+                                    <% } %>
+                                </ul>
+                                <a href="/orders/order._id">invoice</a>
+                            </div>
                         </li>
                     <% }%>
                 </ul>
