@@ -1,6 +1,7 @@
 const { Product } = require('../models/product');
 const fs = require('fs');
-const path = require('path')
+const path = require('path');
+const Order = require('../models/order');
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -74,9 +75,17 @@ exports.createOrder = (req, res) => {
   req.user.addOrder().then(() => res.redirect('/orders'));
 };
 
-exports.getInvoice = (req, res, next) => {
-  let invoiceName = `invoice-${req.params.orderId}.pdf`
+exports.getInvoice = async (req, res, next) => {
+  let invoiceId = req.params.orderId
+  let invoiceName = `invoice-${invoiceId}.pdf`
   let invoicePath = path.join('data','invoices',invoiceName)
+  let invoice = await Order.findById(invoiceId)
+  if (!invoice) {
+    return next(new Error('this invoice does not exist'))
+  }
+  if (invoice.user._id.toString() !== req.user._id.toString()) {
+    return next(new Error('your not allowed to access this'))
+  }
   fs.readFile(invoicePath,(err,data)=>{
     if (err) return next(err)
     res.setHeader('Content-Type','application/pdf')
