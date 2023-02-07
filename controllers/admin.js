@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator');
 const { Product } = require('../models/product');
+const { deleteFile } = require('../util/file');
 
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/add-product', {
@@ -75,7 +76,7 @@ exports.getEditProduct = (req, res, next) => {
 
 exports.postEditProduct = (req, res, next) => {
   let id = req.params.id;
-  let { title, imageUrl, description, price } = req.body;
+  let { title, description, price } = req.body;
   let image = req.file;
   let errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -87,18 +88,22 @@ exports.postEditProduct = (req, res, next) => {
       product: { _id: id, title, description, price },
     });
   }
-  (imageUrl = !image ? imageUrl : image.path),
-    Product.findOneAndUpdate(
-      { _id: id, userId: req.user._id },
-      { title, imageUrl, description, price }
-    ).then(() => {
-      res.redirect('/admin/products');
-    });
+
+  Product.findOneAndUpdate(
+    { _id: id, userId: req.user._id },
+    { title, imageUrl: image && image.path, description, price }
+  ).then((oldProduct) => {
+    if(image) deleteFile(oldProduct.imageUrl)
+    res.redirect('/admin/products');
+  });
 };
 
 exports.postDeleteProduct = (req, res) => {
   let id = req.params.id;
-  Product.findOneAndDelete({ _id: id, userId: req.user._id }).then(() => {
-    req.user.deleteCartItem(id).then(() => res.redirect('/admin/products'));
-  });
+  Product.findOneAndDelete({ _id: id, userId: req.user._id }).then(
+    (deletedProduct) => {
+      deleteFile(deletedProduct.imageUrl);
+      req.user.deleteCartItem(id).then(() => res.redirect('/admin/products'));
+    }
+  );
 };
