@@ -1,6 +1,7 @@
 const { Product } = require('../models/product');
 const fs = require('fs');
 const path = require('path');
+const pdfkit = require('pdfkit');
 const Order = require('../models/order');
 
 exports.getProducts = (req, res, next) => {
@@ -86,10 +87,28 @@ exports.getInvoice = async (req, res, next) => {
   if (invoice.user._id.toString() !== req.user._id.toString()) {
     return next(new Error('your not allowed to access this'));
   }
-  let file = fs.createReadStream(invoicePath);
+
   res.setHeader('Content-Type', 'application/pdf');
   res.setHeader('Content-Disposition', `inline;filename="${invoiceName}"`);
-  file.pipe(res);
+  let pdfDoc = new pdfkit();
+  pdfDoc.pipe(fs.createWriteStream(invoicePath));
+  pdfDoc.pipe(res);
+
+  pdfDoc.fontSize(26).text(`invoice`)
+  pdfDoc.fontSize(16).text(`------------------------------------------------------------------------------------`)
+  let totalPrice = 0
+  invoice.items.forEach(item => {
+    totalPrice+= item.amount*item.product.price
+    pdfDoc.text(`${item.product.title}     ------     amount: ${item.amount}     ------     price: ${item.amount} * ${item.product.price} = ${item.amount*item.product.price} `)
+  })
+  pdfDoc.text(`------------------------------------------------------------------------------------`)
+  pdfDoc.text(`total price: ${totalPrice}`)
+  pdfDoc.end();
+
+  // let file = fs.createReadStream(invoicePath);
+  // res.setHeader('Content-Type', 'application/pdf');
+  // res.setHeader('Content-Disposition', `inline;filename="${invoiceName}"`);
+  // file.pipe(res);
 
   // fs.readFile(invoicePath,(err,data)=>{
   //   if (err) return next(err)
