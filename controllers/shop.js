@@ -76,20 +76,25 @@ exports.createOrder = (req, res) => {
 };
 
 exports.getInvoice = async (req, res, next) => {
-  let invoiceId = req.params.orderId
-  let invoiceName = `invoice-${invoiceId}.pdf`
-  let invoicePath = path.join('data','invoices',invoiceName)
-  let invoice = await Order.findById(invoiceId)
+  let invoiceId = req.params.orderId;
+  let invoiceName = `invoice-${invoiceId}.pdf`;
+  let invoicePath = path.join('data', 'invoices', invoiceName);
+  let invoice = await Order.findById(invoiceId);
   if (!invoice) {
-    return next(new Error('this invoice does not exist'))
+    return next(new Error('this invoice does not exist'));
   }
   if (invoice.user._id.toString() !== req.user._id.toString()) {
-    return next(new Error('your not allowed to access this'))
+    return next(new Error('your not allowed to access this'));
   }
-  fs.readFile(invoicePath,(err,data)=>{
-    if (err) return next(err)
-    res.setHeader('Content-Type','application/pdf')
-    res.setHeader('Content-Disposition',`inline;filename="${invoiceName}"`)
-    res.send(data)
-  })
+  let file = fs.createReadStream(invoicePath);
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `inline;filename="${invoiceName}"`);
+  file.pipe(res);
+
+  // fs.readFile(invoicePath,(err,data)=>{
+  //   if (err) return next(err)
+  //   res.setHeader('Content-Type','application/pdf')
+  //   res.setHeader('Content-Disposition',`inline;filename="${invoiceName}"`)
+  //   res.send(data)
+  // })
 };
