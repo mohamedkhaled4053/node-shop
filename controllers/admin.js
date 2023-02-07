@@ -29,7 +29,7 @@ exports.postAddProduct = (req, res, next) => {
   }
   let product = new Product({
     title,
-    imageUrl: `/${image.path}`,
+    imageUrl: image.path,
     description,
     price,
     userId: req.user._id,
@@ -87,7 +87,7 @@ exports.postEditProduct = (req, res, next) => {
       product: { _id: id, title, description, price },
     });
   }
-  (imageUrl = !image ? imageUrl : `/${image.path}`),
+  (imageUrl = !image ? imageUrl : image.path),
     Product.findOneAndUpdate(
       { _id: id, userId: req.user._id },
       { title, imageUrl, description, price }
