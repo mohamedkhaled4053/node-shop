@@ -27,6 +27,11 @@
                     </article>
                 <% } %>
             </div>
+            <section class="pagination">
+                <% for (let page = 1; page <= numOfPages; page++) { %>
+                <a href="/?page=<%=page%>" class="<%=(page==currentPage)&&'active'%>"><%=page%></a>
+                <% } %>
+            </section>
         <% } else { %>
             <h1>No Products Found!</h1>
         <% } %>

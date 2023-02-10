@@ -4,6 +4,8 @@ const path = require('path');
 const pdfkit = require('pdfkit');
 const Order = require('../models/order');
 
+const ITEMS_PER_PAGE = 2;
+
 exports.getProducts = (req, res, next) => {
   Product.find()
     .then((products) => {
@@ -31,13 +33,19 @@ exports.addToCart = (req, res, next) => {
   });
 };
 
-exports.getIndex = (req, res, next) => {
-  Product.find().then((products) => {
-    res.render('shop/index', {
-      prods: products,
-      pageTitle: 'Shop',
-      path: '/',
-    });
+exports.getIndex = async (req, res, next) => {
+  let page = +req.query.page || 1;
+  let numOfProducts = await Product.find().countDocuments();
+  let numOfPages = Math.ceil(numOfProducts/ ITEMS_PER_PAGE)
+  let products = await Product.find()
+    .skip((page - 1) * ITEMS_PER_PAGE)
+    .limit(ITEMS_PER_PAGE);
+  res.render('shop/index', {
+    prods: products,
+    pageTitle: 'Shop',
+    path: '/',
+    numOfPages,
+    currentPage : page
   });
 };
 
@@ -94,15 +102,27 @@ exports.getInvoice = async (req, res, next) => {
   pdfDoc.pipe(fs.createWriteStream(invoicePath));
   pdfDoc.pipe(res);
 
-  pdfDoc.fontSize(26).text(`invoice`)
-  pdfDoc.fontSize(16).text(`------------------------------------------------------------------------------------`)
-  let totalPrice = 0
-  invoice.items.forEach(item => {
-    totalPrice+= item.amount*item.product.price
-    pdfDoc.text(`${item.product.title}     ------     amount: ${item.amount}     ------     price: ${item.amount} * ${item.product.price} = ${item.amount*item.product.price} `)
-  })
-  pdfDoc.text(`------------------------------------------------------------------------------------`)
-  pdfDoc.text(`total price: ${totalPrice}`)
+  pdfDoc.fontSize(26).text(`invoice`);
+  pdfDoc
+    .fontSize(16)
+    .text(
+      `------------------------------------------------------------------------------------`
+    );
+  let totalPrice = 0;
+  invoice.items.forEach((item) => {
+    totalPrice += item.amount * item.product.price;
+    pdfDoc.text(
+      `${item.product.title}     ------     amount: ${
+        item.amount
+      }     ------     price: ${item.amount} * ${item.product.price} = ${
+        item.amount * item.product.price
+      } `
+    );
+  });
+  pdfDoc.text(
+    `------------------------------------------------------------------------------------`
+  );
+  pdfDoc.text(`total price: ${totalPrice}`);
   pdfDoc.end();
 
   // let file = fs.createReadStream(invoicePath);
