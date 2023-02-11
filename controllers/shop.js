@@ -36,7 +36,7 @@ exports.addToCart = (req, res, next) => {
 exports.getIndex = async (req, res, next) => {
   let page = +req.query.page || 1;
   let numOfProducts = await Product.find().countDocuments();
-  let numOfPages = Math.ceil(numOfProducts/ ITEMS_PER_PAGE)
+  let numOfPages = Math.ceil(numOfProducts / ITEMS_PER_PAGE);
   let products = await Product.find()
     .skip((page - 1) * ITEMS_PER_PAGE)
     .limit(ITEMS_PER_PAGE);
@@ -45,7 +45,7 @@ exports.getIndex = async (req, res, next) => {
     pageTitle: 'Shop',
     path: '/',
     numOfPages,
-    currentPage : page
+    currentPage: page,
   });
 };
 
@@ -70,10 +70,26 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.getCheckout = (req, res, next) => {
-  res.render('shop/checkout', {
-    path: '/checkout',
-    pageTitle: 'Checkout',
-  });
+  req.user
+    .getCart()
+    .then((cart) => {
+
+      let total = 0;
+      cart.forEach((p) => {
+        total += p.amount * p.product.price;
+      });
+      res.render('shop/checkout', {
+        path: '/checkout',
+        pageTitle: 'Checkout',
+        products:cart,
+        totalSum: total,
+      });
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.deleteCartItem = (req, res) => {
