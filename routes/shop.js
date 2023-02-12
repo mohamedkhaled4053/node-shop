@@ -34,9 +34,9 @@ router.get('/checkout',isAuth, getCheckout);
 
 router.post('/delete-cart-product',isAuth, deleteCartItem);
 
-router.post('/create-order',isAuth, createOrder);
+router.get('/checkout/cancel',isAuth, getCheckout);
 
-router.post('/create-order',isAuth, createOrder);
+router.get('/checkout/success',isAuth, createOrder);
 
 router.get('/orders/:orderId',isAuth, getInvoice)
 

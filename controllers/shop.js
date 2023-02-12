@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const pdfkit = require('pdfkit');
 const Order = require('../models/order');
+require('dotenv').config();
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const ITEMS_PER_PAGE = 2;
 
@@ -70,19 +72,42 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.getCheckout = (req, res, next) => {
+  let products;
+  let total;
   req.user
     .getCart()
     .then((cart) => {
-
-      let total = 0;
-      cart.forEach((p) => {
-        total += p.amount * p.product.price;
+      products = cart;
+      total = cart.reduce((total, p) => total + p.amount * p.product.price, 0);
+      return stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        mode:'payment',
+        line_items: products.map((p) => {
+          return {
+            price_data: {
+              currency: 'usd',
+              unit_amount: p.product.price * 100,
+              product_data: {
+                name: p.product.title,
+                description: p.product.description,
+              },
+            },
+            quantity: p.amount,
+          };
+        }),
+        success_url:
+          req.protocol + '://' + req.get('host') + '/checkout/success',
+        cancel_url: req.protocol + '://' + req.get('host') + '/checkout/cancel',
       });
+    })
+    .then((session) => {
       res.render('shop/checkout', {
         path: '/checkout',
         pageTitle: 'Checkout',
-        products:cart,
+        products,
         totalSum: total,
+        stripePublicKey: process.env.STRIPE_PUBLIC_KEY,
+        sessionId: session.id,
       });
     })
     .catch((err) => {
